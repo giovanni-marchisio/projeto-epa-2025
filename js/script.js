@@ -11,16 +11,20 @@ const statusSide = localStorage.getItem('sidebarStatus');
 const modalContainer = document.getElementById('modal-container');
 const transactionForm = document.getElementById('transaction-form')
 
+// Span valores
+const spanReceita = document.getElementById('span-receitas');
+const spanDespesa = document.getElementById('span-despesas');
+const spanInvestimento = document.getElementById('span-investimento');
+const spanFaturaCartao = document.getElementById('span-fatura-cartao');
+const spanSaldo = document.getElementById('span-saldo');
+
 // Tabela transações
 const transactionHistory = document.getElementById('transactions-history');
 
-// Modal add
+
+// ModalS
 const transactionModal = document.getElementById('add-transaction');
-
-// Modal add cartão
 const cardModal = document.getElementById('add-card');
-
-// Modal help
 const helpModal = document.getElementById('help-modal');
 
 // Entrada usuário
@@ -34,6 +38,20 @@ const descriptionTransaction = document.getElementById('description');
 // Variáveis
 const currentDate = new Date().toISOString().slice(0, 10);
 
+// Arrays
+const RECEITAS = [];
+const DESPESAS = [];
+const INVESTIMENTOS = [];
+const FATURAS_CARTAO = [];
+const SALDOS = [];
+const TOTAL = {
+    receita: 0,
+    despesa: 0,
+    investimento: 0,
+    fatura: 0,
+    saldo: 0
+}
+
 
 transactionForm.addEventListener('submit', (e) => {
 
@@ -43,15 +61,18 @@ transactionForm.addEventListener('submit', (e) => {
 
     e.preventDefault();
 
-    let date = dateTransaction.value
-    let value = valueTransaction.value
-    let description = descriptionTransaction.value;
-    let category = categoryTransaction.value;
-    let type = typeTransaction.value;
-    let status = statusTransaction.value;
+    const obj = {
+        date: dateTransaction.value,
+        value: valueTransaction.value,
+        description: descriptionTransaction.value,
+        category: categoryTransaction.value,
+        type: typeTransaction.value,
+        status: statusTransaction.value
+    }
 
-    // 
-    makeTransaction(date, value, description, category, type, status);
+    makeTransaction(obj);
+    storeValues(obj);
+    updateValues();
 
 });
 
@@ -95,17 +116,102 @@ if (statusSide === 'aberto') {
 
 // Funções
 
-function makeTransaction(date, value, description, category, type, transactionStatus) {
-    transactionHistory.innerHTML += `
+function updateList() {
+
+}
+
+function updateValues() {
+
+    TOTAL.receita = 0;
+    TOTAL.despesa = 0;
+    TOTAL.investimento = 0;
+    TOTAL.fatura = 0; 
+
+
+    RECEITAS.forEach((objeto) => {
+        TOTAL.receita += parseInt(objeto.value.replace(".", ""));
+    });
+
+    DESPESAS.forEach((objeto) => {
+        TOTAL.despesa += parseInt(objeto.value.replace(".", ""));
+    });
+
+    INVESTIMENTOS.forEach((objeto) => {
+        TOTAL.investimento += parseInt(objeto.value.replace(".", ""));
+    });
+
+    FATURAS_CARTAO.forEach((objeto) => {
+        TOTAL.fatura += parseInt(objeto.value.replace(".", ""));
+    });
+
+    spanReceita.innerHTML = `R$ ${TOTAL.receita.toFixed(2)}`;
+    if (TOTAL.despesa > 0){
+        spanDespesa.style.color = "red";
+        spanDespesa.innerHTML = `R$ ${TOTAL.despesa.toFixed(2)}`;
+    } else {
+        spanDespesa.style.color = "black";
+        spanDespesa.innerHTML = `R$ ${TOTAL.despesa.toFixed(2)}`;
+    }
+    spanFaturaCartao.innerHTML = `R$ ${TOTAL.fatura.toFixed(2)}`;
+    spanInvestimento.innerHTML = `R$ ${TOTAL.investimento.toFixed(2)}`;
+    if (TOTAL.saldo < 0) {
+        spanSaldo.style.color = "red";
+        spanSaldo.innerHTML = `R$ ${TOTAL.saldo.toFixed(2)}`;
+    } else {
+        spanSaldo.style.color = "black";
+        spanSaldo.innerHTML = `R$ ${TOTAL.saldo.toFixed(2)}`;
+    }
+}
+
+function storeValues(obj) {
+    let value = obj.value.replace(".", "");
+    if (obj.category == "Receita") {
+        RECEITAS.push(obj);
+        SALDOS.push(obj);
+    }
+
+    if (obj.category == "Saldo" && obj.type == "Dinheiro" || obj.type == "Pix" || obj.type == "Débito") {
+        TOTAL.saldo += parseInt(value);
+        SALDOS.push(obj);
+    }
+
+    if (obj.category == "Despesa") {
+        if (obj.type == "Pix" || obj.type == "Débito" || obj.type == "Dinheiro") {
+            TOTAL.saldo -= parseInt(value);
+            DESPESAS.push(obj);
+        } else {
+            DESPESAS.push(obj);
+        }
+    }
+
+    if (obj.category == "Investimento") {
+        if (obj.type == "Pix" || obj.type == "Débito" || obj.type == "Dinheiro") {
+            TOTAL.saldo -= parseInt(value);
+        }
+        INVESTIMENTOS.push(obj);
+    }
+
+    if (obj.category == "Fatura cartão" && obj.status == "Pendente") {
+        FATURAS_CARTAO.push(obj);
+    }
+}
+
+function makeTransaction(obj) {
+    if (obj.category == "Saldo" && obj.type == "Crédito") {
+        return
+    } else {
+        transactionHistory.innerHTML += `
     <tr>
-        <td>${date}</td>
-        <td>R$ ${value}</td>
-        <td>${description}</td>
-        <td>${category}</td>
-        <td>${type}</td>
-        <td>${transactionStatus}</td>
+        <td>${obj.date}</td>
+        <td>R$ ${obj.value}</td>
+        <td>${obj.description}</td>
+        <td>${obj.category}</td>
+        <td>${obj.type}</td>
+        <td>${obj.status}</td>
     </tr>
     `
+    }
+
 }
 
 function openModal(div) {
