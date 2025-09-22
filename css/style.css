@@ -8,6 +8,9 @@
     --color-investimentos: #3d49bd;
     --color-faturas-cartao: #d6ff43;
     --color-saldo: #a1e6b5;
+    --border-input: #e4d9d9;
+    --btn-add-transaction: #64e66f;
+    --btn-add-font: #000;
 }
 
 * {
@@ -25,10 +28,41 @@ body {
     overflow: hidden;
 }
 
-input>#btn-open-menu {
+input > #btn-open-menu {
     display: none;
 }
 
+form label {
+    display: block;
+    font-size: 18px;
+    margin: 8px 0 4px;
+}
+
+form input,
+form select,
+form textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid var(--border-input);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+form button {
+    font-size: 16px;
+    margin-top: 12px;
+    padding: 10px;
+    background: var(--btn-add-transaction);
+    border: none;
+    border-radius: 4px;
+    color: var(--btn-add-font);
+    cursor: pointer;
+}
 
 /* Classes */
 
@@ -147,31 +181,34 @@ input>#btn-open-menu {
 }
 
 .modal {
-   /*  visibility: hidden; */
+    visibility: hidden;
     position: fixed;
-    top: 30%;
-    left: 10%;
-    transform: translate(1vw) scale(0.01, 0.01) ;
+    top: 3.5%;
+    left: auto;
+    transform: translateX(-32vw);
     right: auto;
     bottom: auto;
     background-color: var(--background);
     box-shadow: 2px 2px 6px #0000002d;
     border-radius: 4px;
     padding: 15px;
-    width: 640px;
-    height: 480px;
+    height: 95vh;
+    width: 460px;
     z-index: 10;
-    transition: all 0.75s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.75s ease-in-out;
 }
 
 .modal-header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
 }
 
 .modal-header img {
     width: 40px;
 }
+
 
 /* ID */
 
@@ -211,6 +248,16 @@ input>#btn-open-menu {
     padding-top: 90px;
 }
 
+#transaction-form  input, select {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#transaction-form > label {
+    text-align: justify !important;
+}
+
 #item-1 {
     border-color: var(--color-receitas);
 }
@@ -244,5 +291,6 @@ input>#btn-open-menu {
 
 .open-modal {
     visibility: visible !important;
-    transform: translateX(0px) scale(1, 1) !important;
+    transform: translateX(0px)!important;
 }
+

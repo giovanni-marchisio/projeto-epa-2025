@@ -60,8 +60,8 @@
                             <th>Valor</th>
                             <th>Descrição</th>
                             <th>Categoria</th>
-                            <th>Status</th>
                             <th>Tipo</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="transactions-history">
@@ -78,21 +78,61 @@
     <section class="modal-container" id="modal-container">
         <div class="modal" id="add-transaction">
             <div class="modal-header">
-                <a href="javascript:openModal(transactionModal)"><img src="./img/close.svg" alt=""></a>
+                <h1>Adicionar transação</h1><a href="javascript:openModal(transactionModal)"><img src="./img/close.svg"
+                        alt=""></a>
             </div>
-            <div>
+            <div class="modal-main">
+                <div class="modal-main">
+                    <form id="transaction-form">                        
+                        <label for="date">Data</label>
+                        <input id="date" name="date" type="date" required />
 
+                        <label for="value-transaction">Valor</label>
+                        <input id="value-transaction" name="value-transaction" placeholder="R$ 0,00" required />
+                        
+                        <label for="type-transaction">Tipo</label>
+                        <select id="type-transaction" name="type-transaction" required>
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Pix">Pix</option>
+                            <option value="Débito">Débito</option>
+                            <option value="Crédito">Crédito</option>
+                        </select>
+
+                        <!-- Eu deveria ter pensado melhor em como implementar essa bomba.. -->
+                        <label for="category">Categoria</label>
+                        <select id="category" name="category" required>
+                            <option value="Receita">Receita</option>
+                            <option value="Despesa">Despesa</option>
+                            <option value="Investimento">Investimento</option>
+                            <option value="Fatura cartão">Fatura cartão</option>
+                            <option value="Saldo">Saldo</option>
+                        </select>
+
+                        <label for="status-transaction">Status</label>
+                        <select id="status-transaction" name="status-transaction" required>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Pago">Pago</option>
+                            <option value="Agendado">Agendado</option>
+                        </select>
+
+                        <label for="description">Descrição (opcional)</label>
+                        <textarea id="description" name="description" placeholder="..."></textarea>
+
+                        <button type="submit">Adicionar transação</button>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="modal" id="add-card">
             <div class="modal-header">
-                <a href="javascript:openModal(cardModal)"><img src="./img/close.svg" alt=""></a>
+                <h1>Adicionar cartão</h1><a href="javascript:openModal(cardModal)"><img src="./img/close.svg"alt=""></a>
+
             </div>
 
         </div>
         <div class="modal" id="help-modal">
             <div class="modal-header">
-                <a href="javascript:openModal(helpModal)"><img src="./img/close.svg" alt=""></a>
+                <h1>Ajuda</h1><a href="javascript:openModal(helpModal)"><img src="./img/close.svg" alt=""></a>
             </div>
         </div>
     </section>
