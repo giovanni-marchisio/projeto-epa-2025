@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --background: #ffffff;
+    --background-transaction: #f8f8ef;
+    --color-receitas: #43d85b;
+    --color-despesas: #d64747;
+    --color-investimentos: #3d49bd;
+    --color-faturas-cartao: #d6ff43;
+    --color-saldo: #a1e6b5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: var(--background);
+    overflow: hidden;
+}
+
+input>#btn-open-menu {
+    display: none;
+}
+
+
+/* Classes */
+
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.container-side {
+    margin: 10px;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+
+    transform: translateX(-150px);
+    transition: all 750ms;
+}
+
+.container-accounts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    margin-top: 150px;
+    gap: 30px;
+}
+
+.header-accounts {
+    text-align: center;
+}
+
+.header-accounts h1 {
+    text-shadow: 2px 2px 2px #ccc;
+    font-size: 42px;
+}
+
+.accounts {
+    display: flex;
+    gap: 30px;
+}
+
+.transactions {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-transaction);
+    min-width: 80vw;
+    min-height: 55vh;
+    max-width: 80vw;
+    max-height: 55vh;
+    overflow: scroll;
+    border-radius: 4px;
+}
+
+
+.transactions-table {
+    padding: 15px;
+    text-align: center;
+    border-spacing: 0px 14px;
+    border-collapse: separate;
+}
+
+.transactions-table>thead {
+    font-size: 15px;
+    font-weight: 400;
+    box-shadow: 1px 1px 1px #00000017;
+    width: 100%;
+}
+
+.transactions-table>tbody {
+    gap: 10px;
+
+}
+
+.item {
+    font-size: 19px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 200px;
+    height: 100px;
+    border-radius: 15px;
+    border-bottom: 4px solid red;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 1px 1px 3px #0000004b;
+}
+
+.side-menu {
+    height: 95vh;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    border-radius: 10px;
+    padding-bottom: 250px;
+    background-color: var(--background);
+    box-shadow: 1px 1px 6px #00000020;
+}
+
+.side-menu img {
+    width: 50px;
+    opacity: 90%;
+}
+
+.modal-container {
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.modal {
+   /*  visibility: hidden; */
+    position: fixed;
+    top: 30%;
+    left: 10%;
+    transform: translate(1vw) scale(0.01, 0.01) ;
+    right: auto;
+    bottom: auto;
+    background-color: var(--background);
+    box-shadow: 2px 2px 6px #0000002d;
+    border-radius: 4px;
+    padding: 15px;
+    width: 640px;
+    height: 480px;
+    z-index: 10;
+    transition: all 0.75s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-header img {
+    width: 40px;
+}
+
+/* ID */
+
+#btn-add {
+    transition: all 200ms;
+}
+
+#btn-add:active {
+    filter: brightness(120%);
+    transform: translateY(0.75px);
+}
+
+#btn-open-menu {
+    visibility: hidden;
+}
+
+#btn-arrow {
+    position: fixed;
+    top: 260px;
+    left: 122px;
+    cursor: pointer;
+    transition: all 750ms;
+}
+
+#profile-picture {
+    width: 110px;
+
+}
+
+#logo-etec {
+    padding-bottom: 50px;
+    width: 100px;
+}
+
+
+#btn-help {
+    padding-top: 90px;
+}
+
+#item-1 {
+    border-color: var(--color-receitas);
+}
+
+#item-2 {
+    border-color: var(--color-despesas);
+}
+
+#item-3 {
+    border-color: var(--color-investimentos);
+}
+
+#item-4 {
+    border-color: var(--color-faturas-cartao);
+}
+
+#item-5 {
+    border-color: var(--color-saldo);
+}
+
+/* Interações com JS.*/
+
+.side-open {
+    transform: translateX(0) !important;
+}
+
+.btn-reverse {
+    left: 115px !important;
+    transform: rotate(-180deg) !important;
+}
+
+.open-modal {
+    visibility: visible !important;
+    transform: translateX(0px) scale(1, 1) !important;
+}

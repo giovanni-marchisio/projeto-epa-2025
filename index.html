@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto EPA</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/script.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="container-side" id="container-side">
+            <aside class="side-menu">
+                <input type="checkbox" name="open-menu" id="btn-open-menu">
+                <label for="btn-open-menu">
+                    <img src="./img/arrow.svg" alt="" id="btn-arrow">
+                </label>
+                <img src="./img/logo_etec_sales_gomes.png" alt="" id="logo-etec">
+                <a href="" class="btn-side">
+                    <img src="./img/profile.svg" id="profile-picture" />
+                </a>
+                <a href="javascript:openModal(transactionModal)" class="btn-side" id="btn-add">
+                    <img src="./img/add.svg" />
+                </a>
+                <a href="javascript:openModal(cardModal)" class="btn-side">
+                    <img src="./img/credit_card.svg" />
+                </a>
+                <a href="" class="btn-side">
+                    <img src="./img/chart.svg" />
+                </a>
+                <a href="javascript:openModal(helpModal)" class="btn-side" id="btn-help">
+                    <img src="./img/help.svg" />
+                </a>
+            </aside>
+        </div>
+        <div class="container-accounts">
+            <div class="header-accounts">
+                <p>*Feito para telas 1600x900</p>
+                <h1>
+                    Meu controle financeiro
+                </h1>
+                <p>
+                    Controle suas finanças para atingir seus sonhos e objetivos!
+                </p>
+            </div>
+            <div class="accounts">
+                <div class="item" id="item-1">Receitas<span id="span-receitas">R$ 00,00</span></div>
+                <div class="item" id="item-2">Despesas<span id="span-despesas">R$ 00,00</span></div>
+                <div class="item" id="item-3">Investimentos<span id="span-investimento">R$ 00,00</span></div>
+                <div class="item" id="item-4">Faturas cartão<span id="span-fatura-cartao">R$ 00,00</span></div>
+                <div class="item" id="item-5">Saldo<span id="span-saldo">R$ 00,00</span></div>
+            </div>
+            <div class="transactions">
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Valor</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Status</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-history">
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6">(Páginação)</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <section class="modal-container" id="modal-container">
+        <div class="modal" id="add-transaction">
+            <div class="modal-header">
+                <a href="javascript:openModal(transactionModal)"><img src="./img/close.svg" alt=""></a>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <div class="modal" id="add-card">
+            <div class="modal-header">
+                <a href="javascript:openModal(cardModal)"><img src="./img/close.svg" alt=""></a>
+            </div>
+
+        </div>
+        <div class="modal" id="help-modal">
+            <div class="modal-header">
+                <a href="javascript:openModal(helpModal)"><img src="./img/close.svg" alt=""></a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
