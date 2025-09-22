@@ -3,5 +3,5 @@
 Sistema de controle financeiro simples
 
 **ToDo**
-- [ ] Limpar código.
+- [ ] Limpar o código.
 - [ ] Implementar mais opções na tabela de transações.
