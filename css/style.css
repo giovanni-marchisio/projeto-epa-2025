@@ -258,6 +258,14 @@ form button {
     text-align: justify !important;
 }
 
+#card-options {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 86%;
+    width: 60px;
+}
+
+
 #item-1 {
     border-color: var(--color-receitas);
 }

@@ -1,4 +1,5 @@
 
+
 // Botões
 const btnOpenMenu = document.getElementById('btn-open-menu');
 const btnOpenImg = document.getElementById('btn-arrow')
@@ -37,20 +38,24 @@ const descriptionTransaction = document.getElementById('description');
 
 // Variáveis
 const currentDate = new Date().toISOString().slice(0, 10);
+var id = 0;
 
 // Arrays
-const RECEITAS = [];
-const DESPESAS = [];
-const INVESTIMENTOS = [];
-const FATURAS_CARTAO = [];
-const SALDOS = [];
-const TOTAL = {
+const RECEITAS = JSON.parse(localStorage.getItem("RECEITAS")) || [];
+const DESPESAS = JSON.parse(localStorage.getItem("DESPESAS")) || [];
+const INVESTIMENTOS = JSON.parse(localStorage.getItem("INVESTIMENTOS")) || [];
+const FATURAS_CARTAO = JSON.parse(localStorage.getItem("FATURAS_CARTAO")) || [];
+const SALDOS = JSON.parse(localStorage.getItem("SALDOS")) || [];
+const TOTAL = JSON.parse(localStorage.getItem("TOTAL")) || {
     receita: 0,
     despesa: 0,
     investimento: 0,
     fatura: 0,
     saldo: 0
-}
+};
+
+// 
+const cardOptions = document.getElementById('card-options');
 
 
 transactionForm.addEventListener('submit', (e) => {
@@ -67,13 +72,35 @@ transactionForm.addEventListener('submit', (e) => {
         description: descriptionTransaction.value,
         category: categoryTransaction.value,
         type: typeTransaction.value,
-        status: statusTransaction.value
+        status: statusTransaction.value,
+        id: id++
     }
 
-    makeTransaction(obj);
-    storeValues(obj);
-    updateValues();
+    // Existe formas mais bonitas de fazer isso, mas eu sou preguiçoso
+    if (obj.type == "Crédito") {
+        obj.type += ` x${cardOptions.value}`;
+        console.log(obj.type);
+        makeTransaction(obj);
+        storeValues(obj);
+        store();
+        updateValues();
+    } else {
+        makeTransaction(obj);
+        storeValues(obj);
+        store();
+        updateValues();
+    }
 
+
+});
+
+cardOptions.style.display = "none";
+transactionForm.addEventListener('input', () => {
+    if (typeTransaction.value == "Crédito") {
+        cardOptions.style.display = "block";
+    } else {
+        cardOptions.style.display = "none";
+    }
 });
 
 valueTransaction.addEventListener("input", () => {
@@ -112,40 +139,54 @@ if (statusSide === 'aberto') {
 } else {
     containerSide.classList.remove('side-open');
     btnOpenImg.classList.remove('btn-reverse');
-}
+};
 
 // Funções
 
 function updateList() {
-
+    transactionHistory.innerHTML = "";
+    [...RECEITAS, ...DESPESAS, ...INVESTIMENTOS, ...FATURAS_CARTAO].forEach(obj => {
+        makeTransaction(obj);
+    });
+    updateValues();
 }
 
 function updateValues() {
-
     TOTAL.receita = 0;
     TOTAL.despesa = 0;
     TOTAL.investimento = 0;
-    TOTAL.fatura = 0; 
-
+    TOTAL.fatura = 0;
+    TOTAL.saldo = 0;
 
     RECEITAS.forEach((objeto) => {
-        TOTAL.receita += parseInt(objeto.value.replace(".", ""));
+        const valor = parseInt(objeto.value.replace(".", ""));
+        TOTAL.receita += valor;
+        TOTAL.saldo += valor;
     });
 
     DESPESAS.forEach((objeto) => {
-        TOTAL.despesa += parseInt(objeto.value.replace(".", ""));
+        const valor = parseInt(objeto.value.replace(".", ""));
+        TOTAL.despesa += valor;
+        if (objeto.type.includes("Pix") || objeto.type.includes("Débito") || objeto.type.includes("Dinheiro")) {
+            TOTAL.saldo -= valor;
+        }
     });
 
     INVESTIMENTOS.forEach((objeto) => {
-        TOTAL.investimento += parseInt(objeto.value.replace(".", ""));
+        const valor = parseInt(objeto.value.replace(".", ""));
+        TOTAL.investimento += valor;
+        if (objeto.type.includes("Pix") || objeto.type.includes("Débito") || objeto.type.includes("Dinheiro")) {
+            TOTAL.saldo -= valor;
+        }
     });
 
     FATURAS_CARTAO.forEach((objeto) => {
-        TOTAL.fatura += parseInt(objeto.value.replace(".", ""));
+        const valor = parseInt(objeto.value.replace(".", ""));
+        TOTAL.fatura += valor;
     });
 
     spanReceita.innerHTML = `R$ ${TOTAL.receita.toFixed(2)}`;
-    if (TOTAL.despesa > 0){
+    if (TOTAL.despesa > 0) {
         spanDespesa.style.color = "red";
         spanDespesa.innerHTML = `R$ ${TOTAL.despesa.toFixed(2)}`;
     } else {
@@ -208,6 +249,7 @@ function makeTransaction(obj) {
         <td>${obj.category}</td>
         <td>${obj.type}</td>
         <td>${obj.status}</td>
+        <td><a href="javascript:removeElement(${obj.id})"><img src="./img/delete.svg" alt=""></a></td>
     </tr>
     `
     }
@@ -218,4 +260,29 @@ function openModal(div) {
     div.classList.toggle('open-modal');
 }
 
+function store() {
+    localStorage.setItem("RECEITAS", JSON.stringify(RECEITAS));
+    localStorage.setItem("DESPESAS", JSON.stringify(DESPESAS));
+    localStorage.setItem("INVESTIMENTOS", JSON.stringify(INVESTIMENTOS));
+    localStorage.setItem("FATURAS_CARTAO", JSON.stringify(FATURAS_CARTAO));
+    localStorage.setItem("SALDOS", JSON.stringify(SALDOS));
+    localStorage.setItem("TOTAL", JSON.stringify(TOTAL));
+}
 
+function removeElement(id) {
+    let removed = false;
+    [RECEITAS, DESPESAS, INVESTIMENTOS, FATURAS_CARTAO].forEach(arr => {
+        const idx = arr.findIndex(obj => obj.id === id);
+        if (idx !== -1) {
+            arr.splice(idx, 1);
+            removed = true;
+        }
+    });
+    if (removed) {
+        store();
+        updateList();
+    }
+}
+
+
+window.addEventListener('DOMContentLoaded', updateList);
