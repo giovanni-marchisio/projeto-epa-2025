@@ -18,6 +18,12 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Roboto", sans-serif;
+    transition: all 750ms ease-in-out;
+}
+
+a {
+    text-decoration: none;
+    color: black;
 }
 
 body {
@@ -25,10 +31,10 @@ body {
     flex-direction: column;
     flex: 1;
     background-color: var(--background);
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
-input > #btn-open-menu {
+input>#btn-open-menu {
     display: none;
 }
 
@@ -77,9 +83,7 @@ form button {
     height: 100vh;
     display: flex;
     align-items: center;
-
     transform: translateX(-150px);
-    transition: all 750ms;
 }
 
 .container-accounts {
@@ -87,8 +91,17 @@ form button {
     flex-direction: column;
     align-items: center;
     width: 100vw;
-    margin-top: 150px;
+    margin-top: 50px;
     gap: 30px;
+}
+
+.chart-container {
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    justify-content: flex-start;
+    padding: 15px;
+
 }
 
 .header-accounts {
@@ -155,13 +168,13 @@ form button {
 }
 
 .side-menu {
-    height: 95vh;
+    height: 90vh;
     width: 150px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    gap: 30px;
+    gap: 10px;
     border-radius: 10px;
     padding-bottom: 250px;
     background-color: var(--background);
@@ -169,7 +182,7 @@ form button {
 }
 
 .side-menu img {
-    width: 50px;
+    width: 40px;
     opacity: 90%;
 }
 
@@ -195,7 +208,6 @@ form button {
     height: 95vh;
     width: 460px;
     z-index: 10;
-    transition: all 0.75s ease-in-out;
 }
 
 .modal-header {
@@ -212,8 +224,16 @@ form button {
 
 /* ID */
 
-#btn-add {
-    transition: all 200ms;
+#chart-modal {
+    transform: translateX(-100vw);
+    height: 95vh;
+    width: 100vw !important;
+}
+
+#my-chart {
+    display: flex;
+/*     width: 500px !important;
+    height: 500px !important; */
 }
 
 #btn-add:active {
@@ -230,7 +250,7 @@ form button {
     top: 260px;
     left: 122px;
     cursor: pointer;
-    transition: all 750ms;
+    width: 50px !important;
 }
 
 #profile-picture {
@@ -248,14 +268,36 @@ form button {
     padding-top: 90px;
 }
 
-#transaction-form  input, select {
+#transaction-form input, select {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-#transaction-form > label {
+#transaction-form>label {
     text-align: justify !important;
+}
+
+#select-card-modal {
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--background);
+    align-items: center;
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    border-radius: 6px;
+    transform: scale(1, 0);
+}
+
+#select-card-modal > select {
+    text-align: center;
+    border-radius: 4px;
+    width: 150px;
+    height: 30px;
+
 }
 
 #card-options {
@@ -279,6 +321,7 @@ form button {
 }
 
 #item-4 {
+
     border-color: var(--color-faturas-cartao);
 }
 
@@ -299,6 +342,15 @@ form button {
 
 .open-modal {
     visibility: visible !important;
-    transform: translateX(0px)!important;
+    transform: translateX(0px) !important;
 }
 
+.open-card-modal {
+    visibility: visible !important;
+    transform: scale(1, 1)!important;
+}
+
+.open-modal-fullscreen {
+    visibility: visible !important;
+    transform: translateX(0vw) !important;
+}

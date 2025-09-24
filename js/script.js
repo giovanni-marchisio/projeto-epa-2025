@@ -1,5 +1,3 @@
-
-
 // Botões
 const btnOpenMenu = document.getElementById('btn-open-menu');
 const btnOpenImg = document.getElementById('btn-arrow')
@@ -27,6 +25,8 @@ const transactionHistory = document.getElementById('transactions-history');
 const transactionModal = document.getElementById('add-transaction');
 const cardModal = document.getElementById('add-card');
 const helpModal = document.getElementById('help-modal');
+const cardSelectModal = document.getElementById('select-card-modal');
+const chartModal = document.getElementById('chart-modal');
 
 // Entrada usuário
 const valueTransaction = document.getElementById('value-transaction');
@@ -35,10 +35,6 @@ const typeTransaction = document.getElementById('type-transaction');
 const categoryTransaction = document.getElementById('category');
 const statusTransaction = document.getElementById('status-transaction');
 const descriptionTransaction = document.getElementById('description');
-
-// Variáveis
-const currentDate = new Date().toISOString().slice(0, 10);
-var id = 0;
 
 // Arrays
 const RECEITAS = JSON.parse(localStorage.getItem("RECEITAS")) || [];
@@ -53,11 +49,17 @@ const TOTAL = JSON.parse(localStorage.getItem("TOTAL")) || {
     fatura: 0,
     saldo: 0
 };
+''
 
 // 
 const cardOptions = document.getElementById('card-options');
 
+// Variáveis
+const currentDate = new Date().toISOString().slice(0, 10);
+var id = 0;
+var chartInstance = null;
 
+console.log();
 transactionForm.addEventListener('submit', (e) => {
 
     if (!transactionForm.checkValidity()) {
@@ -79,16 +81,17 @@ transactionForm.addEventListener('submit', (e) => {
     // Existe formas mais bonitas de fazer isso, mas eu sou preguiçoso
     if (obj.type == "Crédito") {
         obj.type += ` x${cardOptions.value}`;
-        console.log(obj.type);
         makeTransaction(obj);
         storeValues(obj);
         store();
         updateValues();
+        updateChart()
     } else {
         makeTransaction(obj);
         storeValues(obj);
         store();
         updateValues();
+        updateChart()
     }
 
 
@@ -141,6 +144,10 @@ if (statusSide === 'aberto') {
     btnOpenImg.classList.remove('btn-reverse');
 };
 
+cardSelectModal.addEventListener("dblclick", () => {
+    cardSelection();
+})
+
 // Funções
 
 function updateList() {
@@ -149,6 +156,7 @@ function updateList() {
         makeTransaction(obj);
     });
     updateValues();
+    updateChart();
 }
 
 function updateValues() {
@@ -162,6 +170,7 @@ function updateValues() {
         const valor = parseInt(objeto.value.replace(".", ""));
         TOTAL.receita += valor;
         TOTAL.saldo += valor;
+
     });
 
     DESPESAS.forEach((objeto) => {
@@ -183,6 +192,10 @@ function updateValues() {
     FATURAS_CARTAO.forEach((objeto) => {
         const valor = parseInt(objeto.value.replace(".", ""));
         TOTAL.fatura += valor;
+        if (objeto.type == "Débito" || objeto.type == "Dinheiro") {
+            TOTAL.saldo -= valor
+        }
+
     });
 
     spanReceita.innerHTML = `R$ ${TOTAL.receita.toFixed(2)}`;
@@ -205,14 +218,9 @@ function updateValues() {
 }
 
 function storeValues(obj) {
-    let value = obj.value.replace(".", "");
+    const value = obj.value.replace(".", "");
     if (obj.category == "Receita") {
         RECEITAS.push(obj);
-        SALDOS.push(obj);
-    }
-
-    if (obj.category == "Saldo" && obj.type == "Dinheiro" || obj.type == "Pix" || obj.type == "Débito") {
-        TOTAL.saldo += parseInt(value);
         SALDOS.push(obj);
     }
 
@@ -232,16 +240,58 @@ function storeValues(obj) {
         INVESTIMENTOS.push(obj);
     }
 
-    if (obj.category == "Fatura cartão" && obj.status == "Pendente") {
-        FATURAS_CARTAO.push(obj);
+    if (obj.category == "Fatura cartão") {
+        if (obj.type == "Débito") {
+            TOTAL.saldo -= parseInt(value);
+            FATURAS_CARTAO.push(obj);
+        } else {
+            FATURAS_CARTAO.push(obj);
+        }
+    }
+
+}
+
+function updateChart() {
+    const pieChart = document.getElementById('my-chart');
+
+    const chartInfo = {
+        labels: ['Receitas', 'Despesas', 'Investimentos', 'Fatura cartão', 'Saldo'],
+        datasets: [{
+            label: 'Valor',
+            data: [TOTAL.receita, TOTAL.despesa, TOTAL.investimento, TOTAL.fatura, TOTAL.saldo],
+            backgroundColor: [
+                '#43d85b',
+                '#d64747',
+                '#3d49bd',
+                '#d6ff43',
+                '#a1e6b5'
+            ],
+            borderColor: [
+                '#43d85b',
+                '#d64747',
+                '#3d49bd',
+                '#d6ff43',
+                '#a1e6b5'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // Atualiza o gráfico ou cria
+    if (chartInstance) {
+        chartInstance.data = chartInfo;
+        chartInstance.update();
+    } else {
+        chartInstance = new Chart(pieChart, {
+            type: 'pie',
+            data: chartInfo
+        });
     }
 }
 
+
 function makeTransaction(obj) {
-    if (obj.category == "Saldo" && obj.type == "Crédito") {
-        return
-    } else {
-        transactionHistory.innerHTML += `
+    transactionHistory.innerHTML += `
     <tr>
         <td>${obj.date}</td>
         <td>R$ ${obj.value}</td>
@@ -252,12 +302,18 @@ function makeTransaction(obj) {
         <td><a href="javascript:removeElement(${obj.id})"><img src="./img/delete.svg" alt=""></a></td>
     </tr>
     `
-    }
-
 }
 
 function openModal(div) {
     div.classList.toggle('open-modal');
+    if (div == 'chartModal') {
+        div.classList.toggle('open-modal-fullscreen');
+    }
+}
+
+
+function cardSelection() {
+    cardSelectModal.classList.toggle('open-card-modal');
 }
 
 function store() {
@@ -272,17 +328,19 @@ function store() {
 function removeElement(id) {
     let removed = false;
     [RECEITAS, DESPESAS, INVESTIMENTOS, FATURAS_CARTAO].forEach(arr => {
-        const idx = arr.findIndex(obj => obj.id === id);
-        if (idx !== -1) {
-            arr.splice(idx, 1);
+        const posicao = arr.findIndex(obj => obj.id === id);
+        if (posicao !== -1) {
+            arr.splice(posicao, 1);
             removed = true;
         }
     });
     if (removed) {
         store();
         updateList();
+        updateChart()
     }
 }
 
 
 window.addEventListener('DOMContentLoaded', updateList);
+

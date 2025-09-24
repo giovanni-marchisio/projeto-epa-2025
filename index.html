@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projeto EPA</title>
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
     <script src="./js/script.js" defer></script>
 </head>
 
@@ -27,7 +28,7 @@
                 <a href="javascript:openModal(cardModal)" class="btn-side">
                     <img src="./img/credit_card.svg" />
                 </a>
-                <a href="" class="btn-side">
+                <a href="javascript:openModal(chartModal)" class="btn-side">
                     <img src="./img/chart.svg" />
                 </a>
                 <a href="javascript:openModal(helpModal)" class="btn-side" id="btn-help">
@@ -46,11 +47,18 @@
                 </p>
             </div>
             <div class="accounts">
-                <div class="item" id="item-1">Receitas  <span id="span-receitas">R$ 0.00</span></div>
-                <div class="item" id="item-2">Despesas  <span id="span-despesas">R$ 0.00</span></div>
-                <div class="item" id="item-3">Investimentos  <span id="span-investimento">R$ 0.00</span></div>
-                <div class="item" id="item-4">Faturas cartão  <span id="span-fatura-cartao">R$ 0.00</span></div>
-                <div class="item" id="item-5">Saldo  <span id="span-saldo">R$ 0.00</span></div>
+                <div class="item" id="item-1">Receitas <span id="span-receitas">R$ 0.00</span></div>
+                <div class="item" id="item-2">Despesas <span id="span-despesas">R$ 0.00</span></div>
+                <div class="item" id="item-3">Investimentos <span id="span-investimento">R$ 0.00</span></div>
+                <div class="item" id="item-4"><a href="javascript:cardSelection()">Faturas cartão</a><span
+                        id="span-fatura-cartao">R$ 0.00</span>
+                    <div id="select-card-modal">
+                        <select name="teste" id="teste">
+                            <option value="teste">teste</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="item" id="item-5">Saldo <span id="span-saldo">R$ 0.00</span></div>
             </div>
             <div class="transactions">
                 <table class="transactions-table">
@@ -68,13 +76,14 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6">(Páginação)</td>
+                            <!-- <td colspan="6">(Páginação)</td> -->
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
     </div>
+
     <section class="modal-container" id="modal-container">
         <div class="modal" id="add-transaction">
             <div class="modal-header">
@@ -83,13 +92,13 @@
             </div>
             <div class="modal-main">
                 <div class="modal-main">
-                    <form id="transaction-form">                        
+                    <form id="transaction-form">
                         <label for="date">Data</label>
                         <input id="date" name="date" type="date" required />
 
                         <label for="value-transaction">Valor</label>
                         <input id="value-transaction" name="value-transaction" placeholder="R$ 0,00" required />
-                        
+
                         <label for="type-transaction">Tipo</label>
                         <select id="type-transaction" name="type-transaction" required>
                             <option value="Dinheiro">Dinheiro</option>
@@ -97,6 +106,7 @@
                             <option value="Débito">Débito</option>
                             <option value="Crédito">Crédito</option>
                         </select>
+                        <!-- Opção para selecionar o cartão aqui ou não sei lá -->
                         <select name="card-options" id="card-options" display="none">
                             <option value="1">X1</option>
                             <option value="2">X2</option>
@@ -111,7 +121,7 @@
                             <option value="11">X11</option>
                             <option value="12">X12</option>
                         </select>
-                        
+
                         <!-- Eu deveria ter pensado melhor em como implementar essa bomba.. -->
                         <label for="category">Categoria</label>
                         <select id="category" name="category" required>
@@ -119,7 +129,6 @@
                             <option value="Despesa">Despesa</option>
                             <option value="Investimento">Investimento</option>
                             <option value="Fatura cartão">Fatura cartão</option>
-                            <option value="Saldo">Saldo</option>
                         </select>
 
                         <label for="status-transaction">Status</label>
@@ -139,10 +148,27 @@
         </div>
         <div class="modal" id="add-card">
             <div class="modal-header">
-                <h1>Adicionar cartão</h1><a href="javascript:openModal(cardModal)"><img src="./img/close.svg"alt=""></a>
-
+                <h1>Adicionar cartão</h1><a href="javascript:openModal(cardModal)"><img src="./img/close.svg"
+                        alt=""></a>
             </div>
+            <div class="modal-main">
+                <form id="add-card-form">
+                    <label for="card-name">Nome do cartão</label>
+                    <input id="card-name" name="card-name" type="text" required />
 
+                    <button type="submit">Adicionar cartão</button>
+                </form>
+            </div>
+        </div>
+        <div class="modal" id="chart-modal">
+            <div class="modal-header">
+                <h1>Gráfico</h1><a href="javascript:openModal(chartModal)"><img src="./img/close.svg" alt=""></a>
+            </div>
+            <div class="modal-main">
+                <div class="chart-container">
+                    <canvas id="my-chart"></canvas>
+                </div>
+            </div>
         </div>
         <div class="modal" id="help-modal">
             <div class="modal-header">
