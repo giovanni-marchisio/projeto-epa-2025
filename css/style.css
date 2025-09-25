@@ -3,6 +3,7 @@
 :root {
     --background: #ffffff;
     --background-transaction: #f8f8ef;
+    --shadow: #00000020;
     --color-receitas: #43d85b;
     --color-despesas: #d64747;
     --color-investimentos: #3d49bd;
@@ -10,7 +11,7 @@
     --color-saldo: #a1e6b5;
     --border-input: #e4d9d9;
     --btn-add-transaction: #64e66f;
-    --btn-add-font: #000;
+    --font-color: #000;
 }
 
 * {
@@ -19,28 +20,24 @@
     box-sizing: border-box;
     font-family: "Roboto", sans-serif;
     transition: all 750ms ease-in-out;
+    color: var(--font-color);
 }
 
 a {
     text-decoration: none;
-    color: black;
 }
 
 body {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    flex: 1;
     background-color: var(--background);
-    overflow-x: hidden;
-}
-
-input>#btn-open-menu {
-    display: none;
+    overflow: hidden;
 }
 
 form label {
     display: block;
-    font-size: 18px;
+    font-size: 26px;
     margin: 8px 0 4px;
 }
 
@@ -66,18 +63,20 @@ form button {
     background: var(--btn-add-transaction);
     border: none;
     border-radius: 4px;
-    color: var(--btn-add-font);
+    color: var(--font-color);
     cursor: pointer;
 }
 
-/* Classes */
+/* */
 
 .container {
     display: flex;
     flex-direction: row;
+    width: 100vw;
+    height: 100vh;
 }
 
-.container-side {
+.side-container {
     margin: 10px;
     position: relative;
     height: 100vh;
@@ -86,7 +85,26 @@ form button {
     transform: translateX(-150px);
 }
 
-.container-accounts {
+.side-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 90vh;
+    width: 150px;
+    gap: 10px;
+    border-radius: 10px;
+    padding-bottom: 250px;
+    background-color: var(--background);
+    box-shadow: 1px 1px 6px var(--shadow);
+}
+
+.side-menu img {
+    width: 40px;
+    opacity: 90%;
+}
+
+.main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -95,30 +113,16 @@ form button {
     gap: 30px;
 }
 
-.chart-container {
-    width: 100vw;
-    height: 80vh;
-    display: flex;
-    justify-content: flex-start;
-    padding: 15px;
-
-}
-
-.header-accounts {
+.main-header {
     text-align: center;
 }
 
-.header-accounts h1 {
-    text-shadow: 2px 2px 2px #ccc;
-    font-size: 42px;
-}
-
-.accounts {
+.account-display {
     display: flex;
     gap: 30px;
 }
 
-.transactions {
+.account-container {
     display: flex;
     flex-direction: column;
     background-color: var(--background-transaction);
@@ -130,60 +134,22 @@ form button {
     border-radius: 4px;
 }
 
-
-.transactions-table {
+.transactions {
     padding: 15px;
     text-align: center;
     border-spacing: 0px 14px;
     border-collapse: separate;
 }
 
-.transactions-table>thead {
+.transactions thead {
     font-size: 15px;
     font-weight: 400;
     box-shadow: 1px 1px 1px #00000017;
     width: 100%;
 }
 
-.transactions-table>tbody {
+.transactions > tbody {
     gap: 10px;
-
-}
-
-.item {
-    font-size: 19px;
-    font-weight: 500;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 200px;
-    height: 100px;
-    border-radius: 15px;
-    border-bottom: 4px solid red;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    box-shadow: 1px 1px 3px #0000004b;
-}
-
-.side-menu {
-    height: 90vh;
-    width: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    border-radius: 10px;
-    padding-bottom: 250px;
-    background-color: var(--background);
-    box-shadow: 1px 1px 6px #00000020;
-}
-
-.side-menu img {
-    width: 40px;
-    opacity: 90%;
 }
 
 .modal-container {
@@ -202,7 +168,7 @@ form button {
     right: auto;
     bottom: auto;
     background-color: var(--background);
-    box-shadow: 2px 2px 6px #0000002d;
+    box-shadow: 2px 2px 6px var(--shadow);
     border-radius: 4px;
     padding: 15px;
     height: 95vh;
@@ -221,6 +187,34 @@ form button {
     width: 40px;
 }
 
+.item {
+    font-size: 19px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 200px;
+    height: 100px;
+    border-style: solid;
+    border-radius: 4px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 1px 1px 3px #0000004b;
+}
+
+.chart-container {
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+
+}
 
 /* ID */
 
@@ -308,24 +302,23 @@ form button {
 }
 
 
-#item-1 {
+#item-receita {
     border-color: var(--color-receitas);
 }
 
-#item-2 {
+#item-despesa {
     border-color: var(--color-despesas);
 }
 
-#item-3 {
+#item-investimento {
     border-color: var(--color-investimentos);
 }
 
-#item-4 {
-
+#item-fatura-cartao {
     border-color: var(--color-faturas-cartao);
 }
 
-#item-5 {
+#item-saldo {
     border-color: var(--color-saldo);
 }
 

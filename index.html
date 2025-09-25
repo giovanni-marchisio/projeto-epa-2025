@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projeto EPA</title>
+    <title>Projeto EPA - 2025</title>
     <link rel="stylesheet" href="./css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
     <script src="./js/script.js" defer></script>
@@ -12,7 +12,7 @@
 
 <body>
     <div class="container">
-        <div class="container-side" id="container-side">
+        <div class="side-container" id="side-container">
             <aside class="side-menu">
                 <input type="checkbox" name="open-menu" id="btn-open-menu">
                 <label for="btn-open-menu">
@@ -36,9 +36,8 @@
                 </a>
             </aside>
         </div>
-        <div class="container-accounts">
-            <div class="header-accounts">
-                <p>*Feito para telas 1600x900</p>
+        <main class="main-container">
+            <div class="main-header">
                 <h1>
                     Meu controle financeiro
                 </h1>
@@ -46,22 +45,21 @@
                     Controle suas finanças para atingir seus sonhos e objetivos!
                 </p>
             </div>
-            <div class="accounts">
-                <div class="item" id="item-1">Receitas <span id="span-receitas">R$ 0.00</span></div>
-                <div class="item" id="item-2">Despesas <span id="span-despesas">R$ 0.00</span></div>
-                <div class="item" id="item-3">Investimentos <span id="span-investimento">R$ 0.00</span></div>
-                <div class="item" id="item-4"><a href="javascript:cardSelection()">Faturas cartão</a><span
+            <div class="account-display">
+                <div class="item" id="item-receita">Receitas <span id="span-receitas">R$ 0.00</span></div>
+                <div class="item" id="item-despesa">Despesas <span id="span-despesas">R$ 0.00</span></div>
+                <div class="item" id="item-investimento">Investimentos <span id="span-investimento">R$ 0.00</span></div>
+                <div class="item" id="item-fatura-cartao"><a href="javascript:cardSelection()">Faturas cartão</a><span
                         id="span-fatura-cartao">R$ 0.00</span>
                     <div id="select-card-modal">
-                        <select name="teste" id="teste">
-                            <option value="teste">teste</option>
+                        <select name="card-list" id="card-list">
                         </select>
                     </div>
                 </div>
-                <div class="item" id="item-5">Saldo <span id="span-saldo">R$ 0.00</span></div>
+                <div class="item" id="item-saldo">Saldo <span id="span-saldo">R$ 0.00</span></div>
             </div>
-            <div class="transactions">
-                <table class="transactions-table">
+            <section class="account-container">
+                <table class="transactions">
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -80,8 +78,8 @@
                         </tr>
                     </tfoot>
                 </table>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
 
     <section class="modal-container" id="modal-container">
@@ -106,7 +104,7 @@
                             <option value="Débito">Débito</option>
                             <option value="Crédito">Crédito</option>
                         </select>
-                        <!-- Opção para selecionar o cartão aqui ou não sei lá -->
+
                         <select name="card-options" id="card-options" display="none">
                             <option value="1">X1</option>
                             <option value="2">X2</option>
@@ -122,7 +120,6 @@
                             <option value="12">X12</option>
                         </select>
 
-                        <!-- Eu deveria ter pensado melhor em como implementar essa bomba.. -->
                         <label for="category">Categoria</label>
                         <select id="category" name="category" required>
                             <option value="Receita">Receita</option>
@@ -140,7 +137,6 @@
 
                         <label for="description">Descrição (opcional)</label>
                         <textarea id="description" name="description" placeholder="..."></textarea>
-
                         <button type="submit">Adicionar transação</button>
                     </form>
                 </div>
@@ -148,9 +144,9 @@
         </div>
         <div class="modal" id="add-card">
             <div class="modal-header">
-                <h1>Adicionar cartão</h1><a href="javascript:openModal(cardModal)"><img src="./img/close.svg"
-                        alt=""></a>
+                <h1>Adicionar cartão</h1><a href="javascript:openModal(cardModal)"><img src="./img/close.svg"alt=""></a>
             </div>
+            <p>Não está 100% funcional ainda*</p>
             <div class="modal-main">
                 <form id="add-card-form">
                     <label for="card-name">Nome do cartão</label>
