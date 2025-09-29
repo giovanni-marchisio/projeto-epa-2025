@@ -23,7 +23,7 @@ const addCardForm = document.getElementById('add-card-form');
 const transactionCardOptions = document.getElementById('card-options');
 
 // Opções cartão
-const cardOptions = document.getElementById('card-list'); 
+const cardOptions = document.getElementById('card-list');
 
 // Span valores
 const spanReceita = document.getElementById('span-receitas');
@@ -62,11 +62,11 @@ const btnOpenImg = document.getElementById('btn-arrow');
 
 // Variáveis
 var currentDate = new Date().toISOString().slice(0, 10);
-var idTransaction = 0;
+var idTransaction = Number(localStorage.getItem('idTransaction')) || 0;
 var chartInstance = null;
 transactionCardOptions.style.display = "none";
 
-addCardForm.addEventListener('submit', (e) =>{
+addCardForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     CARTOES.push(addCardName.value);
@@ -131,7 +131,7 @@ valueTransaction.addEventListener('input', () => {
 
 btnOpenMenu.addEventListener('change', () => {
     var modals = modalContainer.querySelectorAll('div');
-    
+
     if (btnOpenMenu.checked) {
         sideContainer.classList.add('side-open');
         btnOpenImg.classList.add('btn-reverse');
@@ -170,12 +170,74 @@ function openModal(div) {
     }
 };
 
-function addCard(name){
-    cardOptions.innerHTML += 
-    `
+function addCard(name) {
+    cardOptions.innerHTML +=
+        `
     <option value="${name}">${name}</option>
     `
 };
+
+function changeStatus(id, category) {
+    if (category == "Receita") {
+        let posicao = RECEITAS.findIndex(item => item.id === id);
+        if (posicao === -1) return;
+
+        if (RECEITAS[posicao].status == "Agendado" || RECEITAS[posicao].status == "Pendente") {
+            RECEITAS[posicao].status = "Pago";
+        } else if (RECEITAS[posicao].status == "Pago") {
+            RECEITAS[posicao].status = "Agendado";
+        }
+        store();
+        updateList();
+        updateValues();
+        updateChart();
+    }
+
+    if (category == "Despesa") {
+        let posicao = DESPESAS.findIndex(item => item.id === id);
+        if (posicao === -1) return;
+
+        if (DESPESAS[posicao].status == "Agendado" || DESPESAS[posicao].status == "Pendente") {
+            DESPESAS[posicao].status = "Pago";
+        } else if (DESPESAS[posicao].status == "Pago") {
+            DESPESAS[posicao].status = "Agendado";
+        }
+        store();
+        updateList();
+        updateValues();
+        updateChart();
+    }
+
+    if (category == "Investimento") {
+        let posicao = INVESTIMENTOS.findIndex(item => item.id === id);
+        if (posicao === -1) return;
+
+        if (INVESTIMENTOS[posicao].status == "Agendado" || INVESTIMENTOS[posicao].status == "Pendente") {
+            INVESTIMENTOS[posicao].status = "Pago";
+        } else if (INVESTIMENTOS[posicao].status == "Pago") {
+            INVESTIMENTOS[posicao].status = "Agendado";
+        }
+        store();
+        updateList();
+        updateValues();
+        updateChart();
+    }
+
+    if (category == "Fatura cartão") {
+        let posicao = FATURAS_CARTAO.findIndex(item => item.id === id);
+        if (posicao === -1) return;
+
+        if (FATURAS_CARTAO[posicao].status == "Agendado" || FATURAS_CARTAO[posicao].status == "Pendente") {
+            FATURAS_CARTAO[posicao].status = "Pago";
+        } else if (FATURAS_CARTAO[posicao].status == "Pago") {
+            FATURAS_CARTAO[posicao].status = "Agendado";
+        }
+        store();
+        updateList();
+        updateValues();
+        updateChart();
+    }
+}
 
 function makeTransaction(obj) {
     transactionHistory.innerHTML += `
@@ -185,7 +247,7 @@ function makeTransaction(obj) {
         <td>${obj.description}</td>
         <td>${obj.category}</td>
         <td>${obj.type}</td>
-        <td>${obj.status}</td>
+        <td><a href="javascript:changeStatus(${obj.id}, '${obj.category}')">${obj.status}</a></td>
         <td><a href="javascript:removeTransaction(${obj.id})"><img src="./img/delete.svg" alt=""></a></td>
     </tr>
     `
@@ -207,6 +269,7 @@ function removeTransaction(id) {
         updateChart()
     }
 };
+
 
 
 function updateList() {
@@ -271,7 +334,7 @@ function updateValues() {
         spanSaldo.style.color = "red";
         spanSaldo.innerHTML = `R$ ${TOTAL.saldo.toFixed(2)}`;
     } else if (TOTAL.saldo > 0 && TOTAL.saldo <= 100) {
-        spanSaldo.style.color = "yellow";
+        spanSaldo.style.color = "#aad805";
         spanSaldo.innerHTML = `R$ ${TOTAL.saldo.toFixed(2)}`;
     } else {
         spanSaldo.style.color = "black";
@@ -359,10 +422,11 @@ function store() {
     localStorage.setItem("SALDOS", JSON.stringify(SALDOS));
     localStorage.setItem("TOTAL", JSON.stringify(TOTAL));
     localStorage.setItem("CARTOES", JSON.stringify(CARTOES));
+    localStorage.setItem('idTransaction', idTransaction);
 };
 
 window.addEventListener('DOMContentLoaded', () => {
     updateList();
     updateChart();
     updateValues();
-    });
+});

@@ -216,6 +216,27 @@ form button {
 
 }
 
+.creditos {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-card p {
+    font-size: 22px;
+    font-weight: 600;
+}
+.profile-card img {
+    width: 100px;
+    border-radius: 50%;
+}
+
 /* ID */
 
 #chart-modal {
@@ -251,6 +272,8 @@ form button {
     width: 110px;
 
 }
+
+
 
 #logo-etec {
     padding-bottom: 50px;
