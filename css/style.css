@@ -92,7 +92,7 @@ form button {
     justify-content: space-between;
     height: 90vh;
     width: 150px;
-    gap: 10px;
+    gap: 8px;
     border-radius: 10px;
     padding-bottom: 250px;
     background-color: var(--background);
@@ -100,7 +100,7 @@ form button {
 }
 
 .side-menu img {
-    width: 40px;
+    width: 30px;
     opacity: 90%;
 }
 
@@ -184,7 +184,7 @@ form button {
 }
 
 .modal-header img {
-    width: 40px;
+    width: 60px;
 }
 
 .item {
@@ -269,20 +269,20 @@ form button {
 }
 
 #profile-picture {
-    width: 110px;
+    width: 70px;
 
 }
 
 
 
 #logo-etec {
-    padding-bottom: 50px;
+    padding-bottom: 70px;
     width: 100px;
 }
 
 
 #btn-help {
-    padding-top: 90px;
+    padding-top: 185px;
 }
 
 #transaction-form input, select {
