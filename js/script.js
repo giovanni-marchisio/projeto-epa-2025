@@ -240,9 +240,10 @@ function changeStatus(id, category) {
 }
 
 function makeTransaction(obj) {
+    let novaData = new Date (obj.date).toLocaleDateString();
     transactionHistory.innerHTML += `
     <tr>
-        <td>${obj.date}</td>
+        <td>${novaData}</td>
         <td>R$ ${obj.value}</td>
         <td>${obj.description}</td>
         <td>${obj.category}</td>
