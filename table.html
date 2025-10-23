@@ -4,199 +4,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projeto EPA - 2025</title>
-    <link rel="stylesheet" href="./css/table-style.css">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./css/table.css">
+    <script src="./js/interactions.js" defer></script>
+    <script src="./js/table.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
-    <script src="./js/script.js" defer></script>
 </head>
 
 <body>
-    <div class="container">
-        <div class="side-container" id="side-container">
-            <aside class="side-menu">
-                <input type="checkbox" name="open-menu" id="btn-open-menu">
-                <label for="btn-open-menu">
-                    <img src="./img/arrow.svg" alt="" id="btn-arrow">
-                </label>
-                <img src="./img/logo_etec_sales_gomes.png" alt="" id="logo-etec">
-                <a href="" class="btn-side">
-                    <img src="./img/profile.svg" id="profile-picture" />
-                </a>
-                <a href="javascript:openModal(transactionModal)" class="btn-side" id="btn-add">
-                    <img src="./img/add.svg" />
-                </a>
-                <a href="javascript:openModal(cardModal)" class="btn-side">
-                    <img src="./img/credit_card.svg" />
-                </a>
-                <a href="javascript:openModal(chartModal)" class="btn-side">
-                    <img src="./img/chart.svg" />
-                </a>
-                <a href="javascript:openModal(helpModal)" class="btn-side" id="btn-help">
-                    <img src="./img/help.svg" />
-                </a>
-            </aside>
+    <aside class="side-menu" id="side-menu">
+        <span class="area-buttons">
+            <a href="#" onclick="returnHome()"><img src="./img/logo.png" alt="Logo" id="logo"></a>
+            <a href=""><img src="./img/profile_picture.jpg" id="profile-picture"></a>
+            <a href="#" id="add-btn"><img src="./img/add-btn.svg" alt="add-btn"></a>
+            <a href="#" id="show-chart-btn"><img src="./img/graph.png" alt="graph"></a>
+        </span>
+        <a href="#" onclick="returnHome()" id="exit-btn"><img src="./img/logout.svg" alt="" id="logout-btn"></a>
+    </aside>
+    <a href="" class="btn-side" id="close-side"><img src="./img/close.svg" alt=""></a>
+    <main class="dashboard-container">
+        <div class="welcome-message">
+            <span>Bem-vindo,&nbsp;</span><span id="username">teste</span>
         </div>
-        <main class="main-container">
-            <div class="main-header">
-                <h1>
-                    Meu controle financeiro
-                </h1>
-                <p>
-                    Controle suas finanças para atingir seus sonhos e objetivos!
-                </p>
+        <section class="item-list">
+            <div class="item" id="item-1">
+                <p>Receita</p>
+                <span id="valor-1">R$ 00.00</span>
             </div>
-            <div class="account-display">
-                <div class="item" id="item-receita">Receitas <span id="span-receitas">R$ 0.00</span></div>
-                <div class="item" id="item-despesa">Despesas <span id="span-despesas">R$ 0.00</span></div>
-                <div class="item" id="item-investimento">Investimentos <span id="span-investimento">R$ 0.00</span></div>
-                <div class="item" id="item-fatura-cartao"><a href="javascript:cardSelection()">Faturas cartão</a><span
-                        id="span-fatura-cartao">R$ 0.00</span>
-                    <div id="select-card-modal">
-                        <select name="card-list" id="card-list">
-                        </select>
-                    </div>
-                </div>
-                <div class="item" id="item-saldo">Saldo <span id="span-saldo">R$ 0.00</span></div>
+            <div class="item" id="item-2">
+                <p>Despesa</p>
+                <span id="valor-2">R$ 00.00</span>
             </div>
-            <section class="account-container">
-                <table class="transactions">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Valor</th>
-                            <th>Descrição</th>
-                            <th>Categoria</th>
-                            <th>Tipo</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="transactions-history">
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <!-- <td colspan="6">(Páginação)</td> -->
-                        </tr>
-                    </tfoot>
-                </table>
+            <div class="item" id="item-3">
+                <p>Investimento</p>
+                <span id="valor-3">R$ 00.00</span>
+            </div>
+            <div class="item" id="item-4">
+                <p>Saldo</p>
+                <span id="valor-4">R$ 00.00</span>
+            </div>
+        </section>
+        <section class="transactions">
+            <span class="clear-btn-container">
+                <a href="" class="btn-clear" id="btn-clear"><span>Limpar lista</span><img src="./img/delete_forever.svg"
+                        alt=""> </a>
+            </span>
+            <table class="table-transactions">
+                <tr>
+                    <th>Data<img src="./img/arrow_down.svg" id="date-btn"></th>
+                    <th>Descrição</th>
+                    <th>Categoria</th>
+                    <th>Valor <img src="./img/arrow_down.svg" id="value-btn"></th>
+                    <th>Status</th>
+                    <th>Tipo</th>
+                </tr>
+                <tbody id="list-transactions">
+
+                </tbody>
+            </table>
+        </section>
+        <footer id="qtd-pages">
+            <div></div>
+        </footer>
+        <dialog id="transaction-modal">
+            <header>
+                <h1>Adicionar transação</h1> <img class="close-modal-btn" src="./img/close.svg">
+            </header>
+            <form id="transaction-form">
+                <label for="description">Descrição</label>
+                <input type="text" id="description" name="description" required>
+
+                <label for="category">Categoria</label>
+                <select id="category" name="category" required>
+                    <option value="">Selecione</option>
+                    <option value="cartao">Cartão de crédito</option>
+                    <option value="renda">Renda</option>
+                    <option value="alimentacao">Alimentação</option>
+                    <option value="create-category">+ Criar nova categoria...</option>
+                </select>
+                <input type="text" id="new-category" placeholder="Nome da nova categoria">
+
+                <label for="type">Tipo</label>
+                <select id="type" name="type" required>
+                    <option value="">Selecione</option>
+                    <option value="despesa">Despesa</option>
+                    <option value="investimento">Investimento</option>
+                </select>
+
+                <label for="date">Data</label>
+                <input type="date" id="date" name="date" required>
+
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="">Selecione</option>
+                    <option value="pago">Pago</option>
+                    <option value="agendado">Agendado</option>
+                </select>
+
+                <label for="value">Valor (R$)</label>
+                <input type="number" id="value" name="value" step="0.01" min="0" required>
+
+                <button type="submit">Salvar</button>
+            </form>
+        </dialog>
+        <dialog id="chart-modal">
+            <header>
+                <h1>Gráfico</h1> <img class="close-modal-btn" src="./img/close.svg">
+            </header>
+            <section class="chart-section">
+                <canvas id="my-chart"></canvas>
             </section>
-        </main>
-    </div>
+        </dialog>
+        <dialog id="edit-form">
+            <header>
+                <h1>Editar transação</h1> <img class="close-modal-btn" src="./img/close.svg">
+            </header>
+            <form>
+                <label for="description">Descrição</label>
+                <input type="text" id="description" name="description">
 
-    <section class="modal-container" id="modal-container">
-        <div class="modal" id="add-transaction">
-            <div class="modal-header">
-                <h1>Adicionar transação</h1><a href="javascript:openModal(transactionModal)"><img src="./img/close.svg"
-                        alt=""></a>
-            </div>
-            <div class="modal-main">
-                <div class="modal-main">
-                    <form id="transaction-form">
-                        <label for="date">Data</label>
-                        <input id="date" name="date" type="date" required />
+                <label for="date">Data</label>
+                <input type="date" id="date" name="date">
 
-                        <label for="value-transaction">Valor</label>
-                        <input id="value-transaction" name="value-transaction" placeholder="R$ 0,00" required />
-
-                        <label for="type-transaction">Tipo</label>
-                        <select id="type-transaction" name="type-transaction" required>
-                            <option value="Dinheiro">Dinheiro</option>
-                            <option value="Pix">Pix</option>
-                            <option value="Débito">Débito</option>
-                            <option value="Crédito">Crédito</option>
-                        </select>
-
-                        <select name="card-options" id="card-options" display="none">
-                            <option value="1">X1</option>
-                            <option value="2">X2</option>
-                            <option value="3">X3</option>
-                            <option value="4">X4</option>
-                            <option value="5">X5</option>
-                            <option value="6">X6</option>
-                            <option value="7">X7</option>
-                            <option value="8">X8</option>
-                            <option value="9">X9</option>
-                            <option value="10">X10</option>
-                            <option value="11">X11</option>
-                            <option value="12">X12</option>
-                        </select>
-
-                        <label for="category">Categoria</label>
-                        <select id="category" name="category" required>
-                            <option value="Receita">Receita</option>
-                            <option value="Despesa">Despesa</option>
-                            <option value="Investimento">Investimento</option>
-                            <option value="Fatura cartão">Fatura cartão</option>
-                        </select>
-
-                        <label for="status-transaction">Status</label>
-                        <select id="status-transaction" name="status-transaction" required>
-                            <option value="Pendente">Pendente</option>
-                            <option value="Pago">Pago</option>
-                            <option value="Agendado">Agendado</option>
-                        </select>
-
-                        <label for="description">Descrição (opcional)</label>
-                        <textarea id="description" name="description" placeholder="..."></textarea>
-                        <button type="submit">Adicionar transação</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="modal" id="add-card">
-            <div class="modal-header">
-                <h1>Adicionar cartão</h1><a href="javascript:openModal(cardModal)"><img src="./img/close.svg"
-                        alt=""></a>
-            </div>
-            <p>Não está 100% funcional ainda*</p>
-            <div class="modal-main">
-                <form id="add-card-form">
-                    <label for="card-name">Nome do cartão</label>
-                    <input id="card-name" name="card-name" type="text" required />
-
-                    <button type="submit">Adicionar cartão</button>
-                </form>
-            </div>
-        </div>
-        <div class="modal" id="chart-modal">
-            <div class="modal-header">
-                <h1>Gráfico</h1><a href="javascript:openModal(chartModal)"><img src="./img/close.svg" alt=""></a>
-            </div>
-            <div class="modal-main">
-                <div class="chart-container">
-                    <canvas id="my-chart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="modal" id="help-modal">
-            <div class="modal-header">
-                <h1>Ajuda</h1><a href="javascript:openModal(helpModal)"><img src="./img/close.svg" alt=""></a>
-            </div>
-            <div class="creditos">
-                <h3>Criado por: </h3>
-                <div class="profile-card">
-                    <a href="https://github.com/giovanni-marchisio" target="_blank"><img
-                            src="https://avatars.githubusercontent.com/u/207730777?v=4" alt=""></a>
-                    <p><a href="https://github.com/giovanni-marchisio"  target="_blank">Giovanni Marchisio</a></p>
-                </div>
-                <div class="profile-card">
-                    <a href="https://github.com/fernando-pedro"  target="_blank"><img
-                            src="https://avatars.githubusercontent.com/u/211762204?v=4" alt=""></a>
-                    <p><a href="https://github.com/fernando-pedro"  target="_blank">Fernando Pedro</a></p>
-                </div>
-                <div class="profile-card">
-                    <a href="https://github.com/GabsPerrut"  target="_blank"><img
-                            src="https://avatars.githubusercontent.com/u/211530777?v=4" alt=""></a>
-                    <p><a href="https://github.com/GabsPerrut"  target="_blank">Gabriela Soares Pereira Perrut</a></p>
-                </div>
-                <div class="profile-card">
-                    <a href="https://github.com/JoaoEduardoGeraldi"  target="_blank"><img
-                            src="https://avatars.githubusercontent.com/u/199323769?v=4" alt=""></a>
-                    <p><a href="https://github.com/JoaoEduardoGeraldi"  target="_blank">João Eduardo Geraldi</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="">Selecione</option>
+                    <option value="pago">Pago</option>
+                    <option value="agendado">Agendado</option>
+                </select>
+                <button type="submit">Salvar</button>
+            </form>
+        </dialog>
+    </main>
 </body>
 
 </html>
-<!-- 1 2-->

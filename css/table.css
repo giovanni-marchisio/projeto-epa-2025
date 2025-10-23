@@ -1,0 +1,395 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+    color: #000;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+}
+
+aside {
+    width: 20%;
+    transition: all 500ms;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+}
+
+table {
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    padding: 1px;
+    width: 80vw;
+    text-align: center;
+}
+
+dialog {
+    border: 1px solid #ccc;
+    padding: 15px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    border-radius: 8px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 500ms;
+}
+
+dialog>header {
+    display: flex;
+    justify-content: space-between;
+}
+
+th {
+    background-color: #cadad6;
+    border-radius: 4px;
+    text-align: center;
+    height: 10px !important;
+}
+
+th>img {
+    position: absolute;
+
+}
+
+th {
+    background-color: #e7e7e7;
+
+}
+
+th,
+td {
+    padding: 8px;
+    height: 30px;
+    width: 90px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #d4d1d17a;
+}
+
+
+footer {
+    position: absolute;
+    width: 84rem;
+    display: flex;
+    justify-content: flex-end;
+    border: 10px;
+}
+
+footer>button {
+    padding: 5px;
+    width: 50px;
+    background-color: #fff;
+    color: #000;
+}
+
+footer>button:hover {
+    background-color: #ccc;
+}
+
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    display: flex;
+    margin: 0 auto;
+    flex-direction: column;
+    gap: 12px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input,
+select,
+button {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.close {
+    width: 0 !important;
+    transform: translateX(-5rem) !important;
+}
+
+.open-modal {
+    visibility: visible;
+    opacity: 100%;
+}
+
+.display-input {
+    display: block !important;
+    opacity: 100% !important;
+
+}
+
+.welcome-message {
+    width: auto;
+    font-size: 20px;
+    padding: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 2.5rem;
+    visibility: hidden;
+}
+
+.clear-btn-container {
+    width: 80rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-clear {
+    padding: 4px;
+
+}
+
+.btn-clear span {
+    position: relative;
+    color: white;
+    left: 90%;
+}
+
+.btn-clear img {
+    position: relative;
+    top: 0.3rem;
+}
+
+.btn-clear:hover span {
+    color: #000;
+    left: 0%;
+    transition: all ease-in-out 700ms;
+}
+
+.side-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 1px 10px #ccc;
+    transition: all 600ms;
+    justify-content: space-between;
+    padding: 0 0 2rem;
+    width: 8rem;
+}
+
+.side-menu img {
+    width: 47px;
+}
+
+
+.item-list {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-bottom: 3%;
+}
+
+.item {
+    width: 200px;
+    height: 100px;
+    font-weight: 400;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.9rem;
+    border-radius: 8px;
+    box-shadow: -1px 1px 2px #999;
+}
+
+.item p,
+span {
+    color: #000000;
+}
+
+.transactions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.table {
+    width: 70rem;
+    height: 28rem;
+    background-color: chocolate;
+}
+
+.type-table img {
+    opacity: 0;
+    position: relative;
+    top: 0.4rem;
+    right: 0;
+    transition: all 500ms;
+}
+
+.type-table img:hover {
+    opacity: 100%;
+}
+
+.date-table img {
+    visibility: hidden;
+}
+
+.date-table-late,
+.pendente {
+    color: #ec2323;
+
+}
+
+.date-table-late img {
+    position: relative;
+    top: 0.4rem;
+    right: 0.5rem;
+}
+
+
+
+.payment-status {
+    position: relative;
+    top: 3px;
+    opacity: 0;
+    transition: all 500ms;
+}
+
+.payment-status:hover {
+    opacity: 100%;
+}
+
+.payment-status img {
+    width: 1.3rem;
+}
+
+.pago {
+    border-radius: 10px;
+    background-color: #71e6779c;
+    color: #000;
+    padding: 0.4rem;
+}
+
+.pendente {
+    border-radius: 10px;
+    background-color: #f58181b0;
+    color: #000;
+    padding: 0.4rem;
+}
+
+.agendado {
+    border-radius: 10px;
+    background-color: #f3f581b0;
+    color: #000;
+    padding: 0.4rem;
+}
+
+.transaction-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: red;
+}
+
+.area-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-side {
+    transition: all 500ms;
+}
+
+.chart-section {
+    display: flex;
+    justify-content: center;
+    height: 48rem;
+}
+
+#close-side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: 2rem;
+    width: 30px;
+    height: 40px;
+    background-color: #fff;
+    box-shadow: 3px 1px 6px #85858585;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+#close-side img {
+    width: 20px;
+}
+
+#new-category {
+    margin-top: 10px;
+    display: none;
+    opacity: 0;
+    transition: all 500ms;
+}
+
+#profile-picture {
+    width: 80px;
+    border-radius: 50%;
+}
+
+#logo {
+    width: 180px;
+    height: auto;
+    color: #759c35;
+}
+
+#chart-modal {
+    width: 80%;
+    height: 100%;
+}
+
+#item-1 {
+    border-bottom: 2px ridge #00ff0d;
+}
+
+#item-2 {
+    border-bottom: 2px ridge #ff0829;
+}
+
+#item-3 {
+    border-bottom: 2px ridge #5a6fe0;
+}
+
+#item-4 {
+    border-bottom: 2px ridge #70ee76;
+}
