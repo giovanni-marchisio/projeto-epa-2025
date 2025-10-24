@@ -36,12 +36,12 @@ table {
 
 dialog {
     border: 1px solid #ccc;
-    padding: 15px;
+    padding: 20px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 500px;
-    border-radius: 8px;
+    border-radius: 10px;
     visibility: hidden;
     opacity: 0;
     transition: all 500ms;
@@ -162,7 +162,13 @@ button:hover {
     display: flex;
     justify-content: flex-start;
     margin-bottom: 2.5rem;
-    visibility: hidden;
+    visibility: visible;
+    opacity: 100%;
+    transition: all 500ms;
+}
+
+.hide {
+    opacity: 0;
 }
 
 .clear-btn-container {
@@ -172,18 +178,17 @@ button:hover {
 }
 
 .btn-clear {
+    position: relative;
     padding: 4px;
-
+    right: 0rem;
 }
 
 .btn-clear span {
-    position: relative;
     color: white;
-    left: 90%;
+    /* left: 90%; */
 }
 
 .btn-clear img {
-    position: relative;
     top: 0.3rem;
 }
 
@@ -248,15 +253,17 @@ span {
 }
 
 .type-table img {
-    opacity: 0;
+    opacity: 100;
     position: relative;
     top: 0.4rem;
     right: 0;
+    left: 0.5rem;
     transition: all 500ms;
 }
 
 .type-table img:hover {
     opacity: 100%;
+    top: 0;
 }
 
 .date-table img {
@@ -279,13 +286,16 @@ span {
 
 .payment-status {
     position: relative;
-    top: 3px;
-    opacity: 0;
+    top: 0.3rem;
+    left: 0.5rem;
+    opacity: 100%;
     transition: all 500ms;
 }
 
 .payment-status:hover {
     opacity: 100%;
+    top: 0.1rem;
+
 }
 
 .payment-status img {
@@ -299,6 +309,27 @@ span {
     padding: 0.4rem;
 }
 
+.recebido {
+    border-radius: 10px;
+    background-color: #71e6779c;
+    color: #000;
+    padding: 0.4rem;
+}
+
+.resgatado {
+    border-radius: 10px;
+    background-color: #71e6779c;
+    color: #000;
+    padding: 0.4rem;
+}
+
+.aplicado {
+    border-radius: 10px;
+    background-color: #71e6e09c;
+    color: #000;
+    padding: 0.4rem;
+}
+
 .pendente {
     border-radius: 10px;
     background-color: #f58181b0;
@@ -307,6 +338,13 @@ span {
 }
 
 .agendado {
+    border-radius: 10px;
+    background-color: #f3f581b0;
+    color: #000;
+    padding: 0.4rem;
+}
+
+.aguardando {
     border-radius: 10px;
     background-color: #f3f581b0;
     color: #000;
@@ -334,7 +372,7 @@ span {
 .chart-section {
     display: flex;
     justify-content: center;
-    height: 48rem;
+    height: 40rem;
 }
 
 #close-side {
@@ -363,8 +401,13 @@ span {
 }
 
 #profile-picture {
+    margin-bottom: 0.8rem;
     width: 80px;
     border-radius: 50%;
+}
+
+#profile-name {
+    margin-bottom: 1rem;
 }
 
 #logo {
@@ -374,8 +417,61 @@ span {
 }
 
 #chart-modal {
-    width: 80%;
+    width: 90%;
     height: 100%;
+    overflow: hidden;
+}
+
+#remove-all-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#remove-all-form img {
+    width: 100px;
+}
+
+#remove-all-form p {
+    text-align: justify;
+    text-wrap: pretty;
+}
+
+#remove-all-form>form {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#remove-all-form form .close-modal-btn {
+    color: #ffffff;
+    background-color: #ec2323;
+}
+
+
+#edit-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: auto;
+}
+
+#edit-form img {
+    width: 100px;
+}
+
+#edit-form>form {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#edit-form form .close-modal-btn {
+    color: #ffffff;
+    background-color: #ec2323;
 }
 
 #item-1 {
@@ -392,4 +488,16 @@ span {
 
 #item-4 {
     border-bottom: 2px ridge #70ee76;
+}
+
+/* Não tá funcionando :( */
+@media (max-width: 770px) {
+
+    .btn-clear {
+        position: relative !important;
+        padding: 4px;
+        right: 6rem !important;
+        left: 0;
+    }
+
 }

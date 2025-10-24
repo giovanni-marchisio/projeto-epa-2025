@@ -1,3 +1,7 @@
+// Código continua bagunçado...
+// Como eu acho que estou com todas as features implementadas (de uma forma porca), refazer com código mais limpo vai ser mais fácil.
+// O plano pra frente é não fazer nada sem planejar, e forçar o pessoal a não fazer as coisas toda diferente misturando arquivos e pastas sem necessidade.
+
 const LIST = [];
 const DELETED_LIST = [];
 const TRANSACTIONS = {
@@ -13,6 +17,7 @@ var id = 0;
 
 // Form
 const transactionForm = document.getElementById("transaction-form");
+
 
 // Table
 const tableArea = document.getElementById("list-transactions");
@@ -41,27 +46,65 @@ transactionForm.addEventListener("submit", (e) => {
     status = status.options[status.selectedIndex].textContent;
     category = category.options[category.selectedIndex].textContent;
 
+    let newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + 1);
+    date = newDate;
+
     insertTable(description, type, date, status, value, category);
+    transactionForm.reset();
+
 })
 
 clearAllBtn.addEventListener("click", () => {
-    LIST.length = 0;
-    TRANSACTIONS.receita = 0;
-    TRANSACTIONS.despesa = 0;
-    TRANSACTIONS.investimento = 0;
-    TRANSACTIONS.saldo = 0;
+    const confirm = deleteAllForm.querySelector('button');
+    const cancel = deleteAllForm.querySelector('button[class="close-modal-btn"]');
 
-    let obj = {
-        tipo: 'DELETE',
-        status: 'pago',
-    }
+    deleteAllForm.classList.add("open-modal");
+    deleteAllForm.showModal();
 
-    console.log(LIST, TRANSACTIONS);
+    console.log("insideclear");
 
-    updateValues(obj, "update");
-    quantityOfPages();
-    listTransaction(currentPage);
-    updateChart();
+    confirm.addEventListener("click", () => {
+        LIST.length = 0;
+        TRANSACTIONS.receita = 0;
+        TRANSACTIONS.despesa = 0;
+        TRANSACTIONS.investimento = 0;
+        TRANSACTIONS.saldo = 0;
+
+        let obj = {
+            tipo: 'DELETE',
+            status: 'pago',
+        }
+
+        updateValues(obj, "update");
+        quantityOfPages();
+        listTransaction(currentPage);
+        updateChart();
+
+        setTimeout(() => {
+            deleteAllForm.innerHTML = `<img src="./img/green_check.gif" alt="">
+            <header>
+                <h1>Lista deletada!</h1>
+            </header>
+            <div></div>`
+        }, 500);
+
+        setTimeout(() => {
+            deleteAllForm.classList.remove("open-modal");
+            deleteAllForm.close();
+        }, 2 * 1000)
+
+        setTimeout(() => {
+            deleteAllForm.innerHTML = backupDeleteForm;
+        }, 2.5 * 1000);
+
+    })
+
+    cancel.addEventListener("click", () => {
+        deleteAllForm.classList.remove("open-modal");
+        deleteAllForm.close();
+    })
+
 })
 
 function listTransaction(page) {
@@ -77,20 +120,38 @@ function listTransaction(page) {
     pageList.forEach((item) => {
         let status_id = item.status.toLowerCase();
 
-        if (item.data < currentDate && status_id != "pago") {
-            item.status = "Pendente"
-            status_id = item.status.toLowerCase();
+        if (item.data < currentDate && status_id != "pago" && status_id != "recebido") {
+            if (status_id == "aguardando") {
+                item.status = "Aguardando"
+                status_id = item.status.toLowerCase();
+            } else if (status_id == "pendente") {
+                item.status = "Pendente"
+                status_id = item.status.toLowerCase();
+            } else {
+                item.status = "Aplicado"
+                status_id = item.status.toLowerCase();
+            }
+
             tableArea.innerHTML += `<tr>
-                        <td class="date-table-late"><img src="./img/error.svg" alt="">${new Date(item.data).toLocaleDateString()}</td>
+                        <td class="date-table-late"><img src="./img/error.svg" alt="">${new Date(item.data).toLocaleDateString('pt-BR')}</td>
                         <td>${item.descricao}</td>
                         <td>${item.categoria}</td>
                         <td>${formatMoney(item.valor)}</td>
                         <td><span class="${status_id}">${item.status}</span><span class="payment-status" onclick="editTransaction('${item.id}')"><img src="./img/edit2.svg"></span></td>
                         <td>${item.tipo}<span class="type-table" onclick="deleteTransaction('${item.id}')"><img src="./img/delete.svg"></span></td>
                     </tr>`
+        } else if (status_id == "pago" || status_id == "recebido" || status_id == "resgatado") {
+            tableArea.innerHTML += `<tr>
+                        <td class="date-table"><img src="./img/error.svg" alt="">${new Date(item.data).toLocaleDateString('pt-BR')}</td>
+                        <td>${item.descricao}</td>
+                        <td>${item.categoria}</td>
+                        <td>${formatMoney(item.valor)}</td>
+                        <td><span class="${status_id}">${item.status}</span></td>
+                        <td>${item.tipo}<span class="type-table" onclick="deleteTransaction('${item.id}')"><img src="./img/delete.svg"></span></td>
+                    </tr>`
         } else {
             tableArea.innerHTML += `<tr>
-                        <td class="date-table"><img src="./img/error.svg" alt="">${new Date(item.data).toLocaleDateString()}</td>
+                        <td class="date-table"><img src="./img/error.svg" alt="">${new Date(item.data).toLocaleDateString('pt-BR')}</td>
                         <td>${item.descricao}</td>
                         <td>${item.categoria}</td>
                         <td>${formatMoney(item.valor)}</td>
@@ -160,7 +221,60 @@ function deleteTransaction(id) {
 function editTransaction(id) {
     editForm.showModal();
     editForm.classList.add("open-modal");
-    // toDo
+
+    var posicao = LIST.findIndex((i) => i.id == id);
+    var obj = LIST[posicao];
+
+    const confirm = editForm.querySelector('button');
+    const cancel = editForm.querySelector('button[class="close-modal-btn"]');
+
+    cancel.addEventListener("click", () => {
+        editForm.classList.remove("open-modal");
+        editForm.close();
+    })
+
+    confirm.addEventListener("click", () => {
+
+        setTimeout(() => {
+            editForm.innerHTML = `<img src="./img/green_check.gif" alt="">
+            <header>
+                <h1>Pagamento registrado com sucesso!</h1>
+            </header>
+            <div></div>`
+        }, 100);
+
+        setTimeout(() => {
+            editForm.classList.remove("open-modal");
+            editForm.close();
+
+            if (obj.status == "Aplicado") {
+                obj.status = "Resgatado";
+                obj.data = currentDate;
+                updateValues(obj, "update");
+                quantityOfPages();
+                listTransaction(currentPage);
+                updateChart();
+            } else if (obj.status == "Aguardando") {
+                obj.status = "Recebido";
+                obj.data = currentDate;
+                updateValues(obj, "update");
+                quantityOfPages();
+                listTransaction(currentPage);
+                updateChart();
+            } else {
+                obj.status = "Pago";
+                obj.data = currentDate;
+                updateValues(obj, "update");
+                quantityOfPages();
+                listTransaction(currentPage);
+                updateChart();
+            }
+        }, 2 * 1000);
+
+        setTimeout(() => {
+            editForm.innerHTML = backupEditForm;
+        }, 2.5 * 1000);
+    })
 }
 
 function changeOrder(array, date, price) {
@@ -184,14 +298,13 @@ function quantityOfPages() {
     for (let i = 1; i <= totalPages; i++) {
         qtdPages.innerHTML += `<button onclick='listTransaction(${i})'>${i}</button>`
     }
-    console.log(totalPages);
 }
 
 function updateValues(obj, type) {
     let tipo = obj.tipo.toLowerCase();
     let status = obj.status.toLowerCase();
 
-    if (tipo == "receita" && status == "pago") {
+    if (tipo == "receita" && status == "recebido") {
         TRANSACTIONS.receita += (parseInt(obj.valor));
     }
 
@@ -199,7 +312,12 @@ function updateValues(obj, type) {
         TRANSACTIONS.despesa += (parseInt(obj.valor));
     }
 
-    if (tipo == "investimento" && status == "pago") {
+    if (tipo == "investimento" && status == "resgatado") {
+        TRANSACTIONS.investimento -= (parseInt(obj.valor));
+        TRANSACTIONS.saldo += (parseInt(obj.valor));
+    }
+
+    if (tipo == "investimento" && status == "pago" || status == "aplicado") {
         TRANSACTIONS.investimento += (parseInt(obj.valor));
     }
 
@@ -233,7 +351,7 @@ function updateValues(obj, type) {
         saldo.innerHTML = formatMoney(TRANSACTIONS.saldo);
     }
 
-    if (status == "pago" && type == "new") {
+    if (status == "pago" || status == "aplicado" || status == "recebido" && type == "new") {
         receita.innerHTML = formatMoney(TRANSACTIONS.receita);
         despesa.innerHTML = formatMoney(TRANSACTIONS.despesa);
         despesa.style.color = "#000000";

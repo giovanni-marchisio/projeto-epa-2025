@@ -1,7 +1,12 @@
 // Modals
 const transactionModal = document.getElementById("transaction-modal");
 const chartModal = document.getElementById("chart-modal");
+const deleteAllForm = document.getElementById("remove-all-form");
 const editForm = document.getElementById("edit-form");
+
+// Backing up default values
+const backupDeleteForm = deleteAllForm.innerHTML;
+const backupEditForm = editForm.innerHTML;
 
 // Buttons
 const addTransactionBtn = document.getElementById("add-btn");
@@ -18,11 +23,28 @@ const valueBtn = document.getElementById("value-btn");
 // Select
 const categorySelect = document.getElementById("category");
 const inputCategory = document.getElementById("new-category");
+const typeSelect = document.getElementById("type");
 
 const btnLinksArray = document.querySelectorAll('a');
+const btnArray = document.querySelectorAll('button');
 
 // Chart stuff
 var chartInstance = null;
+
+// localStorage stuff
+const USERS = JSON.parse(localStorage.getItem("usuarios"));
+
+// Welcome message and user display thing
+const welcomeMessage = document.querySelector('.welcome-message');
+const displayName = document.getElementById("username");
+const profileName = document.getElementById("profile-name");
+displayName.innerHTML = USERS[0].nome;
+profileName.innerHTML = USERS[0].nome;
+
+setTimeout(() => {
+  welcomeMessage.classList.add("hide");
+}, 2 * 1000);
+
 
 btnLinksArray.forEach((btn) => {
   btn.addEventListener("click", (e) => {
@@ -49,7 +71,7 @@ toggleSide.addEventListener("click", (e) => {
 })
 
 dateBtn.addEventListener('click', () => {
-  console.log(itemOrder, pageOrder);
+
   if (pageOrder == "newest") {
     pageOrder = "oldest"
     dateBtn.src = "./img/arrow_up.svg"
@@ -95,8 +117,32 @@ openChartBtn.addEventListener("click", () => {
   chartModal.classList.add("open-modal")
 })
 
+typeSelect.addEventListener("change", () => {
+  const status = document.getElementById("status");
+
+  if (typeSelect.value == "investimento") {
+    [...status.options].forEach((item) => {
+      if (item.innerText != "Aplicado" || item.innerText != "Resgatado") {
+        item.style.display = "none";
+      }
+    });
+
+    status.innerHTML += `<option value="pago">Aplicado</option>
+    <option value="pendente">Resgatado</option>`;
+  } else {
+
+    [...status.options].forEach((item) => {
+      item.style.display = "block";
+      if (item.innerText == "Aplicado" || item.innerText == "Resgatado") {
+        status.removeChild(item);
+      }
+    });
+  }
+})
+
 categorySelect.addEventListener("change", () => {
   const tipo = document.getElementById("type");
+  const status = document.getElementById("status");
 
   if (categorySelect.value == 'create-category') {
     inputCategory.classList.add("display-input");
@@ -105,27 +151,45 @@ categorySelect.addEventListener("change", () => {
     inputCategory.classList.remove("display-input");
   }
 
-  if (categorySelect.value == "renda"){
+  if (categorySelect.value == "renda") {
     tipo.innerHTML += `<option value="receita">Receita</option>`;
-    [...tipo.options].forEach((item) =>{
+    [...tipo.options].forEach((item) => {
       item.style.display = "none";
-    })
+    });
+
+    [...status.options].forEach((item) => {
+      if (item.innerText != "Recebido" || item.innerText != "Aguardando") {
+        item.style.display = "none";
+      }
+    });
+    status.innerHTML += `<option value="pago">Recebido</option>
+    <option value="pendente">Aguardando</option>`;
+
     tipo.value = "receita";
   } else {
     tipo.value = "";
-    
-      [...tipo.options].forEach((item) =>{
-        if (item.value != "receita"){
-          item.style.display = "block";
-        }
-    })
+    status.value = "";
+
+    [...tipo.options].forEach((item) => {
+      if (item.value != "receita") {
+        item.style.display = "block";
+      }
+    });
+
+    [...status.options].forEach((item) => {
+      item.style.display = "block";
+      if (item.innerText == "Recebido" || item.innerText == "Aguardando" || item.innerText == "Aplicado" || item.innerText == "Resgatado") {
+        status.removeChild(item);
+      }
+    });
+
   }
+
 })
 
 inputCategory.addEventListener("keypress", (e) => {
   if (e.key === 'Enter' && inputCategory.value.trim() !== "") {
     e.preventDefault();
-    console.log("teste");
 
     const newCategory = inputCategory.value.trim();
     const newOption = document.createElement('option');
@@ -141,7 +205,6 @@ inputCategory.addEventListener("keypress", (e) => {
 
 closeModalBtn.forEach((btn) => {
   btn.addEventListener("click", () => {
-    console.log("teste");
     const modal = document.querySelector('dialog.open-modal');
     if (!modal) {
       console.log("Não foi encontrado nenhum modal, zé");
@@ -157,52 +220,53 @@ closeModalBtn.forEach((btn) => {
 
 function returnHome() {
   window.location.href = "index.html";
+  localStorage.clear();
 }
 
-function goToLogin(){
+function goToLogin() {
   window.location.href = "login.html";
 }
 
-function goToRegistre(){
-  window.location.href = "registre-se.html";
+function goToRegister() {
+  window.location.href = "cadastro.html";
 }
 
-function goToDashboard(){
+function goToDashboard() {
   window.location.href = "table.html";
 }
 
 function updateChart() {
-    const pieChart = document.getElementById('my-chart');
+  const pieChart = document.getElementById('my-chart');
 
-    const chartInfo = {
-        labels: ['Receitas', 'Despesas', 'Investimentos', 'Saldo'],
-        datasets: [{
-            label: 'Valor',
-            data: [TRANSACTIONS.receita, TRANSACTIONS.despesa, TRANSACTIONS.investimento, TRANSACTIONS.saldo],
-            backgroundColor: [
-                '#43d85b',
-                '#d64747',
-                '#3d49bd',
-                '#a1e6b5'
-            ],
-            borderColor: [
-                '#43d85b',
-                '#d64747',
-                '#3d49bd',
-                '#a1e6b5'
-            ],
-            borderWidth: 1
-        }]
-    };
+  const chartInfo = {
+    labels: ['Receitas', 'Despesas', 'Investimentos', 'Saldo'],
+    datasets: [{
+      label: 'Valor',
+      data: [TRANSACTIONS.receita, TRANSACTIONS.despesa, TRANSACTIONS.investimento, TRANSACTIONS.saldo],
+      backgroundColor: [
+        '#43d85b',
+        '#d64747',
+        '#3d49bd',
+        '#a1e6b5'
+      ],
+      borderColor: [
+        '#43d85b',
+        '#d64747',
+        '#3d49bd',
+        '#a1e6b5'
+      ],
+      borderWidth: 1
+    }]
+  };
 
-    // Atualiza o gráfico ou cria
-    if (chartInstance) {
-        chartInstance.data = chartInfo;
-        chartInstance.update();
-    } else {
-        chartInstance = new Chart(pieChart, {
-            type: 'pie',
-            data: chartInfo
-        });
-    }
+  // Atualiza o gráfico ou cria
+  if (chartInstance) {
+    chartInstance.data = chartInfo;
+    chartInstance.update();
+  } else {
+    chartInstance = new Chart(pieChart, {
+      type: 'pie',
+      data: chartInfo
+    });
+  }
 }

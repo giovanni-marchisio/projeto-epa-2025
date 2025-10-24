@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="./css/login.css">
+    <script src="./js/login.js" defer></script>
+    <script src="./js/interactions.js" defer></script>
 </head>
+
 <body>
-    <!-- ADICIONAR HEADER -->
     <div class="login-container">
         <h2>Login</h2>
         <form>
             <label for="email">Email:</label>
-            <input type="email" id="email" placeholder="Digite seu email">
+            <input type="email" id="email" placeholder="Digite seu email" required>
 
             <label for="senha">Senha:</label>
-            <input type="password" id="senha" placeholder="Digite sua senha">
-
-            <button class="Registrar" type="submit">Entrar</button>
-            <button class="Registrar" type="submit">Registre-se</button>
+            <input type="password" id="senha" placeholder="Digite sua senha" required>
+            <span id="msg-erro"></span>
+            <button class="registrar" id="entrar" type="submit">Entrar</button>
+            <button class="registrar" id="registrar" type="button">Registre-se</button>
         </form>
     </div>
 </body>
 </html>
-

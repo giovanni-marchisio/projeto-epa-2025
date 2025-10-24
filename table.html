@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./css/table.css">
     <script src="./js/interactions.js" defer></script>
     <script src="./js/table.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+    <script src="./js/chart.umd.min.js" defer></script>
 </head>
 
 <body>
@@ -16,6 +16,7 @@
         <span class="area-buttons">
             <a href="#" onclick="returnHome()"><img src="./img/logo.png" alt="Logo" id="logo"></a>
             <a href=""><img src="./img/profile_picture.jpg" id="profile-picture"></a>
+            <span id="profile-name"></span>
             <a href="#" id="add-btn"><img src="./img/add-btn.svg" alt="add-btn"></a>
             <a href="#" id="show-chart-btn"><img src="./img/graph.png" alt="graph"></a>
         </span>
@@ -116,23 +117,24 @@
             </section>
         </dialog>
         <dialog id="edit-form">
+            <img src="./img/alert.svg" alt="">
             <header>
-                <h1>Editar transação</h1> <img class="close-modal-btn" src="./img/close.svg">
+                <h1>Confirmar pagamento ?</h1>
             </header>
             <form>
-                <label for="description">Descrição</label>
-                <input type="text" id="description" name="description">
-
-                <label for="date">Data</label>
-                <input type="date" id="date" name="date">
-
-                <label for="status">Status</label>
-                <select id="status" name="status" required>
-                    <option value="">Selecione</option>
-                    <option value="pago">Pago</option>
-                    <option value="agendado">Agendado</option>
-                </select>
-                <button type="submit">Salvar</button>
+                <button type="button">Confirmar</button>
+                <button type="button" class="close-modal-btn">Cancelar</button>
+            </form>
+        </dialog>
+        <dialog id="remove-all-form">
+            <img src="./img/error_1000dp.svg" alt="">
+            <header>
+                <h1>Deletar lista</h1>
+            </header>
+            <p>Você tem certeza que deseja deletar todos os itens da lista ?</p>
+            <form>
+                <button type="button">Sim</button>
+                <button type="button" class="close-modal-btn">Não</button>
             </form>
         </dialog>
     </main>
