@@ -163,6 +163,10 @@ function goToLogin(){
   window.location.href = "login.html";
 }
 
+function goToRegistre(){
+  window.location.href = "registre-se.html";
+}
+
 function goToDashboard(){
   window.location.href = "table.html";
 }
