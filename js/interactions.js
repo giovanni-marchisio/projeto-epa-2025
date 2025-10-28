@@ -19,6 +19,7 @@ const exitDashBtn = document.getElementById("exit-btn");
 // Table buttons
 const dateBtn = document.getElementById("date-btn");
 const valueBtn = document.getElementById("value-btn");
+const statusBtn = document.getElementById("status-btn");
 
 // Select
 const categorySelect = document.getElementById("category");
@@ -39,7 +40,7 @@ const welcomeMessage = document.querySelector('.welcome-message');
 const displayName = document.getElementById("username");
 const profileName = document.getElementById("profile-name");
 displayName.innerHTML = USERS[0].nome;
-profileName.innerHTML = USERS[0].nome;
+profileName.innerHTML = `<p>${USERS[0].nome}</p>`;
 
 setTimeout(() => {
   welcomeMessage.classList.add("hide");
@@ -70,34 +71,61 @@ toggleSide.addEventListener("click", (e) => {
 
 })
 
-dateBtn.addEventListener('click', () => {
+statusBtn.addEventListener('click', () => {
 
-  if (pageOrder == "newest") {
+  listTransaction(currentPage);
+  if (statusOrder == 0 || statusOrder == "low") {
+    statusOrder = "high";
+    itemOrder = 0;
+    pageOrder = 0;
+    
+    statusBtn.src = "./img/arrow_up.svg";
+    listTransaction(currentPage);
+
+  } else if (statusOrder == "high") {
+    statusOrder = "low";
+    itemOrder = 0;
+    pageOrder = 0;
+
+    statusBtn.src = "./img/arrow_down.svg";
+    listTransaction(currentPage);
+  }
+
+})
+
+dateBtn.addEventListener('click', () => {
+  
+  listTransaction(currentPage);
+  if (pageOrder == "newest" || pageOrder == 0) {
     pageOrder = "oldest"
     dateBtn.src = "./img/arrow_up.svg"
     itemOrder = 0;
-
+    statusOrder = 0;
     listTransaction(currentPage);
   } else if (pageOrder == "oldest") {
     pageOrder = "newest";
     dateBtn.src = "./img/arrow_down.svg"
     itemOrder = 0;
-
+    statusOrder = 0;
     listTransaction(currentPage);
   }
 
 });
 
 valueBtn.addEventListener('click', () => {
+
+  listTransaction(currentPage);
   if (itemOrder == 0 || itemOrder == "low") {
     itemOrder = "high";
     valueBtn.src = "./img/arrow_up.svg"
-
+    pageOrder = 0;
+    statusOrder = 0;
     listTransaction(currentPage);
   } else if (itemOrder == "high") {
     itemOrder = "low";
     valueBtn.src = "./img/arrow_down.svg"
-
+    pageOrder = 0;
+    statusOrder = 0;
     listTransaction(currentPage);
   }
 

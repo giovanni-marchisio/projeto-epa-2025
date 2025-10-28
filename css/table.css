@@ -408,7 +408,10 @@ span {
 
 #profile-name {
     margin-bottom: 1rem;
+    width: 120px;
+    text-align: center;
 }
+
 
 #logo {
     width: 180px;

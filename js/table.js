@@ -23,8 +23,9 @@ const transactionForm = document.getElementById("transaction-form");
 const tableArea = document.getElementById("list-transactions");
 
 // Sorting stuff  
-var pageOrder = "newest"; // oldest | newest 
+var pageOrder = "newest"; // oldest | newest | 0
 var itemOrder = 0; // high | low | 0;
+var statusOrder = 0; // oldest | newest | 0
 var currentPage = 1;
 var itemsPerPage = 8;
 var currentDate = new Date().toISOString().split('T')[0];
@@ -46,9 +47,7 @@ transactionForm.addEventListener("submit", (e) => {
     status = status.options[status.selectedIndex].textContent;
     category = category.options[category.selectedIndex].textContent;
 
-    let newDate = new Date(date);
-    newDate.setDate(newDate.getDate() + 1);
-    date = newDate;
+
 
     insertTable(description, type, date, status, value, category);
     transactionForm.reset();
@@ -111,7 +110,7 @@ function listTransaction(page) {
     tableArea.innerHTML = "";
     let listInOrder = LIST;
 
-    changeOrder(listInOrder, pageOrder, itemOrder);
+    changeOrder(listInOrder, pageOrder, itemOrder, statusOrder);
 
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
@@ -119,30 +118,33 @@ function listTransaction(page) {
 
     pageList.forEach((item) => {
         let status_id = item.status.toLowerCase();
+        let newDate = new Date(item.data);
+        newDate.setDate(newDate.getDate() + 1);
+        newDate = newDate;
 
         if (item.data < currentDate && status_id != "pago" && status_id != "recebido") {
             if (status_id == "aguardando") {
                 item.status = "Aguardando"
                 status_id = item.status.toLowerCase();
-            } else if (status_id == "pendente") {
+            } else if (status_id == "pendente" || status_id == "agendado") {
                 item.status = "Pendente"
                 status_id = item.status.toLowerCase();
-            } else {
+            } else if (status_id == "aplicado") {
                 item.status = "Aplicado"
                 status_id = item.status.toLowerCase();
             }
 
             tableArea.innerHTML += `<tr>
-                        <td class="date-table-late"><img src="./img/error.svg" alt="">${new Date(item.data).toLocaleDateString('pt-BR')}</td>
+                        <td class="date-table-late"><img src="./img/error.svg" alt="">${new Date(newDate).toLocaleDateString('pt-BR')}</td>
                         <td>${item.descricao}</td>
                         <td>${item.categoria}</td>
                         <td>${formatMoney(item.valor)}</td>
-                        <td><span class="${status_id}">${item.status}</span><span class="payment-status" onclick="editTransaction('${item.id}')"><img src="./img/edit2.svg"></span></td>
+                        <td><span class="${status_id}">${item.status}</span><span class="payment-status" onclick="editTransaction('${item.id}', '${status_id}')"><img src="./img/edit2.svg"></span></td>
                         <td>${item.tipo}<span class="type-table" onclick="deleteTransaction('${item.id}')"><img src="./img/delete.svg"></span></td>
                     </tr>`
         } else if (status_id == "pago" || status_id == "recebido" || status_id == "resgatado") {
             tableArea.innerHTML += `<tr>
-                        <td class="date-table"><img src="./img/error.svg" alt="">${new Date(item.data).toLocaleDateString('pt-BR')}</td>
+                        <td class="date-table"><img src="./img/error.svg" alt="">${new Date(newDate).toLocaleDateString('pt-BR')}</td>
                         <td>${item.descricao}</td>
                         <td>${item.categoria}</td>
                         <td>${formatMoney(item.valor)}</td>
@@ -151,11 +153,11 @@ function listTransaction(page) {
                     </tr>`
         } else {
             tableArea.innerHTML += `<tr>
-                        <td class="date-table"><img src="./img/error.svg" alt="">${new Date(item.data).toLocaleDateString('pt-BR')}</td>
+                        <td class="date-table"><img src="./img/error.svg" alt="">${new Date(newDate).toLocaleDateString('pt-BR')}</td>
                         <td>${item.descricao}</td>
                         <td>${item.categoria}</td>
                         <td>${formatMoney(item.valor)}</td>
-                        <td><span class="${status_id}">${item.status}</span><span class="payment-status" onclick="editTransaction('${item.id}')"><img src="./img/edit2.svg"></span></td>
+                        <td><span class="${status_id}">${item.status}</span><span class="payment-status" onclick="editTransaction('${item.id}', '${status_id}')"><img src="./img/edit2.svg"></span></td>
                         <td>${item.tipo}<span class="type-table" onclick="deleteTransaction('${item.id}')"><img src="./img/delete.svg"></span></td>
                     </tr>`
         }
@@ -190,6 +192,7 @@ function insertTable(descricao, tipo, data, status, valor, categoria) {
 function deleteTransaction(id) {
     const posicao = LIST.findIndex((i) => i.id == id);
     const tipo = LIST[posicao].tipo.toLowerCase();
+    const status = LIST[posicao].status.toLowerCase();
     const valor = parseInt(LIST[posicao].valor);
 
     DELETED_LIST.push(LIST[posicao]);
@@ -202,7 +205,7 @@ function deleteTransaction(id) {
         TRANSACTIONS.despesa -= valor;
     }
 
-    if (tipo == "investimento") {
+    if (tipo == "investimento" && status != "resgatado") {
         TRANSACTIONS.investimento -= valor;
     }
 
@@ -218,7 +221,27 @@ function deleteTransaction(id) {
     updateChart();
 }
 
-function editTransaction(id) {
+function editTransaction(id, type) {
+
+    if (type == "aplicado") {
+        editForm.innerHTML = `<img src="./img/alert.svg" alt="">
+            <header>
+                <h1>Deseja resgatar seu investimento ?</h1>
+            </header>
+            <form>
+                <button type="button">Sim</button>
+                <button type="button" class="close-modal-btn">Não</button>
+            </form>`
+    } else if (type == "aguardando") {
+        editForm.innerHTML = `<img src="./img/alert.svg" alt="">
+            <header>
+                <h1>Deseja atualizar status do pagamento ?</h1>
+            </header>
+            <form>
+                <button type="button">Sim</button>
+                <button type="button" class="close-modal-btn">Não</button>
+            </form>`
+    }
     editForm.showModal();
     editForm.classList.add("open-modal");
 
@@ -236,11 +259,26 @@ function editTransaction(id) {
     confirm.addEventListener("click", () => {
 
         setTimeout(() => {
-            editForm.innerHTML = `<img src="./img/green_check.gif" alt="">
+            if (type == "aplicado") {
+                editForm.innerHTML = `<img src="./img/green_check.gif" alt="">
+            <header>
+                <h1>Investimento resgatado!</h1>
+            </header>
+            <div></div>`
+            } else if (type == "aguardando") {
+                editForm.innerHTML = `<img src="./img/green_check.gif" alt="">
+            <header>
+                <h1>Status atualizado com sucesso!</h1>
+            </header>
+            <div></div>`
+            } else {
+                editForm.innerHTML = `<img src="./img/green_check.gif" alt="">
             <header>
                 <h1>Pagamento registrado com sucesso!</h1>
             </header>
             <div></div>`
+            }
+
         }, 100);
 
         setTimeout(() => {
@@ -277,7 +315,7 @@ function editTransaction(id) {
     })
 }
 
-function changeOrder(array, date, price) {
+function changeOrder(array, date, price, status) {
     if (date == "oldest") {
         array.sort((a, b) => new Date(a.data) - new Date(b.data));
     } else if (date == "newest") {
@@ -288,6 +326,12 @@ function changeOrder(array, date, price) {
         array.sort((a, b) => Number(a.valor) - Number(b.valor));
     } else if (price == "low") {
         array.sort((a, b) => Number(b.valor) - Number(a.valor));
+    }
+
+    if (status == "low") {
+        array.sort((a, b) => a.status.toLowerCase().localeCompare(b.status.toLowerCase()));
+    } else if (status == "high") {
+        array.sort((a, b) => b.status.toLowerCase().localeCompare(a.status.toLowerCase()));
     }
 }
 
